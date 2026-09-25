@@ -1,0 +1,12 @@
+node_modules/
+dist/
+release/
+.env
+.env.*
+!.env.example
+.sites-runtime/
+.wrangler/
+*.log
+test-results/
+playwright-report/
+.DS_Store

@@ -1,0 +1,12 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+await fs.mkdir('dist/server',{recursive:true});
+const shared=await fs.readFile('shared/url-policy.mjs','utf8');
+const worker=(await fs.readFile('server/worker.mjs','utf8')).replace(/^import[^\n]+\n/,'');
+await fs.writeFile('dist/server/index.js',shared+'\n'+worker);
+await fs.mkdir('dist/.openai',{recursive:true});await fs.copyFile('.openai/hosting.json','dist/.openai/hosting.json');
+const files=[];async function walk(dir){for(const entry of await fs.readdir(dir,{withFileTypes:true})){const p=path.join(dir,entry.name);if(entry.isDirectory())await walk(p);else files.push('/'+path.relative('dist/client',p).replaceAll('\\','/'));}}await walk('dist/client');
+const assets=files.filter(f=>f!=='/sw.js');
+const version='pb-'+Date.now();
+await fs.writeFile('dist/client/sw.js',`const CACHE=${JSON.stringify(version)};const FILES=${JSON.stringify(assets)};self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting())));self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('pb-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));self.addEventListener('fetch',event=>{const u=new URL(event.request.url);if(event.request.method!=='GET'||u.origin!==self.location.origin||u.pathname.startsWith('/api/'))return;event.respondWith(fetch(event.request).catch(()=>caches.match(event.request).then(r=>r||(event.request.mode==='navigate'?caches.match('/index.html'):Response.error()))));});`);
+console.log('Worker and offline cache built.');

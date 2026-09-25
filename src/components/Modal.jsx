@@ -1,0 +1,4 @@
+import React,{useEffect,useRef} from 'react';
+import {X} from 'lucide-react';
+export function Modal({title,onClose,children,wide=false}){const ref=useRef(null);useEffect(()=>{const el=ref.current;el.showModal();const cancel=e=>{e.preventDefault();onClose();};el.addEventListener('cancel',cancel);return()=>{el.removeEventListener('cancel',cancel);el.close();};},[]);return <dialog ref={ref} className={'modal '+(wide?'wide':'')} onClick={e=>{if(e.target===e.currentTarget)onClose();}} aria-label={title}><div className="modal-heading"><h2>{title}</h2><button className="icon-button" aria-label="Close dialog" onClick={onClose}><X size={21}/></button></div>{children}</dialog>;}
+export function Field({label,children,hint}){return <label className="field"><span>{label}</span>{children}{hint&&<small>{hint}</small>}</label>;}
