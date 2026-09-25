@@ -9,3 +9,6 @@
 @media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}}
 
 .download-ready{position:fixed;z-index:1000;bottom:20px;right:20px;max-width:min(480px,calc(100vw - 40px));display:flex;align-items:center;gap:16px;padding:14px 18px;background:#fffdf7;border:1px solid #d6d3ca;box-shadow:0 4px 22px #0002;border-radius:10px}.download-ready a{color:#2455d9;overflow-wrap:anywhere}.download-ready button{border:0;background:transparent;font-size:24px;cursor:pointer}
+@media(max-width:600px){.book-spread{container-type:inline-size}.text-page{aspect-ratio:auto;min-height:140cqw}.text-page .page-copy{top:auto;max-height:none;overflow:visible;padding:18% 12% 38%}.text-page .botanical{height:16%;width:35%}}
+@media(max-width:400px){.options-grid{grid-template-columns:1fr}}
+.import-error{padding:12px 14px;border:1px solid #b95545;border-radius:5px;background:#fff8f4;color:#743626;font:14px/1.5 system-ui,sans-serif}

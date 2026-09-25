@@ -8,11 +8,12 @@ import {fileURLToPath} from 'node:url';
 import {publicUrl,isPublicIP} from '../shared/url-policy.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const types={'.html':'text/html; charset=utf-8','.js':'text/javascript','.mjs':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png','.json':'application/json','.webmanifest':'application/manifest+json','.wasm':'application/wasm'};
+export function pinnedLookup(addresses){return (_hostname,options,callback)=>{if(options?.all)callback(null,addresses.map(address=>({address,family:4})));else callback(null,addresses[0],4);};}
 async function body(req,limit=25000000){let out=[];let size=0;for await(const c of req){size+=c.length;if(size>limit)throw new Error('Request is too large.');out.push(c);}return Buffer.concat(out);}
 async function website(input,depth=0){
   if(depth>4)throw new Error('Too many redirects.');const url=publicUrl(input);
   const addresses=await dns.resolve4(url.hostname);if(!addresses.length||addresses.some(a=>!isPublicIP(a)))throw new Error('This address is not a public website.');
-  return new Promise((resolve,reject)=>{const req=https.get(url,{headers:{'User-Agent':'PictureBook/0.1 (story import)','Accept':'text/html,text/plain'},lookup:(_hostname,_options,cb)=>cb(null,addresses[0],4),timeout:15000},res=>{
+  return new Promise((resolve,reject)=>{const req=https.get(url,{headers:{'User-Agent':'PictureBook/0.1 (story import)','Accept':'text/html,text/plain'},lookup:pinnedLookup(addresses),timeout:15000},res=>{
     if(res.statusCode>=300&&res.statusCode<400&&res.headers.location){res.resume();website(new URL(res.headers.location,url).href,depth+1).then(resolve,reject);return;}
     if(res.statusCode!==200){res.resume();reject(new Error('The website did not allow this import. Paste its text or upload a saved document.'));return;}
     if(!/text\/(html|plain)/i.test(res.headers['content-type']||'')){res.resume();reject(new Error('This link is not an HTML or text page. Download the document and upload it instead.'));return;}

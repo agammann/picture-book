@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {newBook,validateBook,splitSource,validImage} from '../shared/book.mjs';
 import {publicUrl,isPublicIP,readLimited} from '../shared/url-policy.mjs';
-import {startServer} from '../server/index.mjs';
+import {startServer,pinnedLookup} from '../server/index.mjs';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
@@ -37,6 +37,11 @@ test('website import accepts public HTTPS names only',()=>{
 test('website import enforces response size even without a content-length',async()=>{
  assert.equal(await readLimited(new Response('hello'),5),'hello');
  await assert.rejects(readLimited(new Response('too large'),5),/too large/);
+});
+test('website lookup supports both Node DNS callback forms using only resolved addresses',()=>{
+ const lookup=pinnedLookup(['93.184.216.34','93.184.216.35']);
+ lookup('example.com',{all:true},(error,addresses)=>{assert.equal(error,null);assert.deepEqual(addresses,[{address:'93.184.216.34',family:4},{address:'93.184.216.35',family:4}]);});
+ lookup('example.com',{},(error,address,family)=>{assert.equal(error,null);assert.equal(address,'93.184.216.34');assert.equal(family,4);});
 });
 test('local server serves editor, rejects foreign origins and never returns its key',async t=>{
  const server=await startServer({port:0,key:'test-only-noncredential'});t.after(()=>new Promise(resolve=>server.close(resolve)));

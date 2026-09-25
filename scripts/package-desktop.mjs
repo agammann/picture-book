@@ -9,7 +9,9 @@ await fs.mkdir(destination,{recursive:true});await fs.cp(path.dirname(electron),
 await fs.rename(path.join(destination,'electron.exe'),path.join(destination,'Picture Book.exe'));
 const app=path.join(destination,'resources','app');await fs.mkdir(app,{recursive:true});
 for(const dir of ['desktop','server','shared','dist/client'])await fs.cp(dir,path.join(app,dir),{recursive:true});
-for(const file of ['LICENSE','README.md'])await fs.copyFile(file,path.join(app,file));
+await fs.copyFile('LICENSE',path.join(app,'LICENSE'));
+const readme=(await fs.readFile('README.md','utf8')).replace(/\]\((examples\/[^)]+)\)/g,'](https://github.com/agammann/picture-book/blob/main/$1)');
+await fs.writeFile(path.join(app,'README.md'),readme);
 const source=JSON.parse(await fs.readFile('package.json','utf8'));
 await fs.writeFile(path.join(app,'package.json'),JSON.stringify({name:source.name,version:source.version,main:'desktop/main.cjs',type:'module',license:source.license},null,2));
 await fs.writeFile(path.join(destination,'START-HERE.txt'),'Picture Book\r\n\r\nRun Picture Book.exe. Keep all the files in this folder together.\r\nYour books are stored in the application profile on this computer. Export a project to back them up.\r\nGeneration: connect your own OpenAI key in Settings or use compatible local models. No key is bundled.\r\nThis is an unsigned portable Windows build.\r\n');
