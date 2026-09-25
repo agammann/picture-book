@@ -1,6 +1,14 @@
 # Picture Book
 
-Turn a long or difficult book into a fun, easy-to-read picture book. Free software, MIT licensed. Web app, installable PWA, and portable Windows desktop app.
+Turn a long or difficult book into a fun, easy-to-read picture book. Free software, MIT licensed. Use the website in your browser, or choose the optional portable Windows desktop app.
+
+## Use Picture Book online
+
+**[Open Picture Book](https://picture-book-studio.alx21.chatgpt.site)** — no download or installation required.
+
+Read Alice's Adventures in Wonderland immediately, or choose **New book** to upload your own book, paste text, or import a public web page. Connect your own generation service in **Settings** to adapt and illustrate a new book. Reading, manual editing, and exports are free; OpenAI generation uses your own provider credits.
+
+Books stay in this browser on this device. Export an editable project to back up your work or move it to another device. The website requires an internet connection to open; the optional Windows version runs locally.
 
 ## Read the showcase
 
@@ -26,7 +34,7 @@ Make each story welcoming and easy to follow. Keep the important causes, choices
 - Generate one illustration or all missing illustrations; upload your own art.
 - Undo and redo edits, read a book full screen, or use the browser's read-aloud voice.
 - Save books on your device and export a printable PDF, an illustration PNG, or an editable project.
-- Install the web app. The editor, Alice showcase, and saved books work offline after the first visit.
+- Read, edit, and export in your browser without installing an app. Books are saved in this browser; keep an exported project as a backup.
 
 Picture Book has no paywall or export watermark. Optional OpenAI generation is billed to **your own provider account**. Manual editing and exports need no paid service. Compatible local models can run through the local server or desktop app.
 

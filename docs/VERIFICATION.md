@@ -2,12 +2,12 @@
 
 ## Current scope
 
-Picture Book provides a web editor, an installable PWA, and a portable Windows package. Alice's Adventures in Wonderland is the first-visit showcase. The Time Machine is an additional complete example. The earlier original sample and unused demonstration books are excluded from the source and release folders. Public hosted deployment is pending.
+Picture Book provides a browser website and a portable Windows package. Alice's Adventures in Wonderland is the first-visit showcase. The Time Machine is an additional complete example. The earlier original sample and unused demonstration books are excluded from the source and release folders. The public website is hosted on [ChatGPT Sites](https://picture-book-studio.alx21.chatgpt.site). Browser installation features have been removed.
 
 ## Verified behavior
 
-- The production browser build, offline cache, and server worker build completed locally.
-- Seven core tests passed, including import validation, source splitting, local server behavior, cast matching for image references, and exact local export bytes without overwriting existing files.
+- The production browser build and server worker build completed locally.
+- Eight core tests passed, including import validation, source splitting, local server behavior, cast matching for image references, and exact local export bytes without overwriting existing files.
 - Both selected books contain 12 illustrated spreads and 24 PDF pages. Their adaptation prose was manually reviewed and simplified. Each reaches the original ending.
 - Image review found extraneous cast members. Scene prompts now contain only named recurring characters, and image references require a matching cast. Revised scenes were inspected again.
 - The Time Machine also received three prop corrections so its machine is not present while missing in the story. The final riverbank, museum, and forest illustrations were inspected with the accompanying story.
@@ -34,4 +34,4 @@ The editorial visual system was checked against the concept. Artwork crops, live
 
 ## Remaining limitations
 
-Generated drafts still require editorial and visual review. The examples are reviewed adaptations, not unedited model output. Real local-model services and installation on physical mobile devices have not been tested. Public hosting is not deployed. Provider refusals stop the affected illustration while preserving completed work. No comparative claim against another app has been tested.
+Generated drafts still require editorial and visual review. The examples are reviewed adaptations, not unedited model output. Real local-model services have not been tested. Provider refusals stop the affected illustration while preserving completed work. No comparative claim against another app has been tested.
