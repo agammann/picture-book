@@ -1,17 +1,32 @@
 # Picture Book
 
-Turn a story into an editable, illustrated book. Free software, MIT licensed. Web app, installable PWA, and portable Windows desktop app.
+Turn a long or difficult book into a fun, easy-to-read picture book. Free software, MIT licensed. Web app, installable PWA, and portable Windows desktop app.
+
+## Read the showcase
+
+**Alice’s Adventures in Wonderland is the main showcase and opens on a first visit.** The Time Machine is a second example. Both adaptations use simple language, a connected story, and the original ending. Each has 12 illustrated spreads across 24 pages. These examples were edited and reviewed after generation.
+
+| Alice's Adventures in Wonderland | The Time Machine |
+| --- | --- |
+| [![Alice beside the little door](examples/alice-in-wonderland/cover.webp)](examples/alice-in-wonderland/book.pdf) | [![The inventor demonstrates his model](examples/the-time-machine/cover.webp)](examples/the-time-machine/book.pdf) |
+| [Read PDF](examples/alice-in-wonderland/book.pdf) · [Editable project](examples/alice-in-wonderland/book.picturebook.json) | [Read PDF](examples/the-time-machine/book.pdf) · [Editable project](examples/the-time-machine/book.picturebook.json) |
+
+Download an editable project, then choose **New book → Choose a file** to open it. Public example projects include the adaptation and illustrations, with the original uploaded document removed. [About the examples](examples/README.md).
+
+## Our storytelling standard
+
+Make each story welcoming and easy to follow. Keep the important causes, choices, consequences, and real ending. Give the opening, central journey, and resolution enough room. Use familiar words without losing the story's meaning, and make each illustration agree with its page. A tragic or uncertain ending remains tragic or uncertain. Quality comes from careful execution and review.
 
 ## What you can do
 
 - Import text PDFs, DOCX, text, Markdown, HTML, or a public web page.
 - Adapt a story into 8, 12, 16, 24, 32, or 48 pages, then edit every spread.
-- Choose an art style, target reader, and language.
+- Choose an art style, reading level, and language. Simple language is the default: short sentences, familiar words, and a story that reaches its real ending.
 - Maintain a character description and visual reference across illustrations.
 - Generate one illustration or all missing illustrations; upload your own art.
 - Undo and redo edits, read a book full screen, or use the browser's read-aloud voice.
 - Save books on your device and export a printable PDF, an illustration PNG, or an editable project.
-- Install the web app. The editor, saved books, and bundled original sample work offline after the first visit.
+- Install the web app. The editor, Alice showcase, and saved books work offline after the first visit.
 
 Picture Book has no paywall or export watermark. Optional OpenAI generation is billed to **your own provider account**. Manual editing and exports need no paid service. Compatible local models can run through the local server or desktop app.
 
@@ -53,9 +68,9 @@ Generation is a draft: review names, facts, chronology, and visual continuity. L
 
 Completed reading sections are cached on this device so retries can resume. Errors remain visible until dismissed. Finished illustrations are saved one at a time. A stopped or failed image request may still incur a provider charge.
 
-PDF exports have portrait pages matching the editor and rasterized text. Editable projects include the original source and all artwork. Export before clearing browser data or moving devices. Browser storage is not a cloud backup.
+Local and desktop exports are saved in **Downloads/Picture Book**, preserving existing files. Hosted web exports use your browser’s download flow and leave a Save link available. PDF exports have portrait pages matching the editor and rasterized text. Editable projects include the original source and all artwork. Export before clearing browser data or moving devices. Browser storage is not a cloud backup.
 
-Use stories you own, have permission to adapt, or that are in the public domain. The bundled **The Lantern Keeper** sample is an original story. No third-party novel PDF is distributed in this project.
+Use stories you own, have permission to adapt, or that are in the public domain. No third-party novel PDF is distributed in this project.
 
 ## Privacy
 
@@ -71,7 +86,7 @@ npm run package:source
 
 `dist/client` contains the browser app; `dist/server/index.js` is a worker for a host exposing an `ASSETS` fetch binding. The Node server can also serve the complete app. Set the worker asset binding and SPA fallback according to your host. `.openai/hosting.json` associates a checkout with a Sites project when used with Sites.
 
-The source archive uses an explicit file allowlist and excludes keys, local books, dependencies, build output, and account-specific hosting metadata.
+The source archive uses an explicit file allowlist and includes the two reviewed examples and excludes keys, private local books, dependencies, build output, and account-specific hosting metadata.
 
 ## License
 

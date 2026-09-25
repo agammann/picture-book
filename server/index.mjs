@@ -3,6 +3,7 @@ import https from 'node:https';
 import dns from 'node:dns/promises';
 import fs from 'node:fs';
 import path from 'node:path';
+import os from 'node:os';
 import {fileURLToPath} from 'node:url';
 import {publicUrl,isPublicIP} from '../shared/url-policy.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
@@ -18,7 +19,7 @@ async function website(input,depth=0){
     let size=0;const chunks=[];res.on('data',c=>{size+=c.length;if(size>3000000){req.destroy(new Error('This page is too large.'));return;}chunks.push(c);});res.on('end',()=>resolve({html:Buffer.concat(chunks).toString('utf8'),url:url.href}));res.on('error',reject);
   });req.on('timeout',()=>req.destroy(new Error('The website took too long to respond.')));req.on('error',reject);});
 }
-export async function startServer({port=4173,key=process.env.OPENAI_API_KEY||'',staticDir=path.join(root,'dist/client')}={}){
+export async function startServer({port=4173,key=process.env.OPENAI_API_KEY||'',staticDir=path.join(root,'dist/client'),exportDirectory=path.join(os.homedir(),'Downloads','Picture Book')}={}){
   let server;server=http.createServer(async(req,res)=>{
     const json=(status,value)=>{res.writeHead(status,{'Content-Type':'application/json','Cache-Control':'no-store'}).end(JSON.stringify(value));};
     try{
@@ -28,8 +29,18 @@ export async function startServer({port=4173,key=process.env.OPENAI_API_KEY||'',
       if(url.pathname.startsWith('/api/')){
         const incomingOrigin=req.headers.origin;
         if(incomingOrigin && ![origin,`http://localhost:${actualPort}`,'http://127.0.0.1:5173'].includes(incomingOrigin)){json(403,{error:'Origin not allowed.'});return;}
-        if(url.pathname==='/api/config'&&req.method==='GET'){json(200,{local:true,configured:!!key});return;}
+        if(url.pathname==='/api/config'&&req.method==='GET'){json(200,{local:true,configured:!!key,localExports:true});return;}
         if(req.method!=='POST'){json(405,{error:'Method not allowed.'});return;}
+        if(url.pathname==='/api/export'){
+          if(![origin,`http://localhost:${actualPort}`,'http://127.0.0.1:5173'].includes(incomingOrigin)){json(403,{error:'Open Picture Book to save an export.'});return;}
+          const name=decodeURIComponent(req.headers['x-picture-book-filename']||'');
+          if(!name||name.length>120||/[<>:"/\\|?*\x00-\x1f]/.test(name)||!(/\.picturebook\.json$|\.pdf$|\.png$/i.test(name))){json(400,{error:'Unsupported export filename.'});return;}
+          const bytes=await body(req,64000000);await fs.promises.mkdir(exportDirectory,{recursive:true});
+          const ext=path.extname(name),stem=name.slice(0,-ext.length);let saved;
+          for(let n=0;n<1000;n++){const candidate=path.join(exportDirectory,n?`${stem} (${n})${ext}`:name);try{await fs.promises.writeFile(candidate,bytes,{flag:'wx'});saved=candidate;break;}catch(e){if(e.code!=='EEXIST')throw e;}}
+          if(!saved)throw new Error('Too many exports with this name. Choose a different book title.');
+          json(200,{saved:true,path:saved});return;
+        }
         if(url.pathname==='/api/import-url'){const {url:source}=JSON.parse(await body(req,10000));json(200,await website(source));return;}
         if(url.pathname.startsWith('/api/openai/')){
           if(!key){json(401,{error:'Connect your OpenAI key in Settings.'});return;}

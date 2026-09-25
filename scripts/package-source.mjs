@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import {zipSync} from 'fflate';
 const root=process.cwd();const output=path.resolve(process.argv[2]||'../../outputs/Picture-Book-Source.zip');
-const allowed=['src','public','server','shared','scripts','desktop','tests','docs','.github'];
+const allowed=['src','public','server','shared','scripts','desktop','tests','docs','examples','.github'];
 const files={};
 async function walk(relative){for(const item of await fs.readdir(relative,{withFileTypes:true})){if(item.isSymbolicLink())throw new Error('Source package must not contain links.');const name=path.join(relative,item.name);if(item.isDirectory())await walk(name);else files['picture-book/'+name.replaceAll('\\','/')]=new Uint8Array(await fs.readFile(name));}}
 for(const dir of allowed)try{await walk(dir);}catch(e){if(e.code!=='ENOENT')throw e;}

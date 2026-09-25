@@ -2,19 +2,19 @@
 
 ## Current scope
 
-Picture Book provides a web editor, installable PWA assets and a portable Windows package. The public repository contains the application and an original illustrated sample. Public hosted deployment is pending.
+Picture Book provides a web editor, an installable PWA, and a portable Windows package. Alice's Adventures in Wonderland is the first-visit showcase. The Time Machine is an additional complete example. The earlier original sample and unused demonstration books are excluded from the source and release folders. Public hosted deployment is pending.
 
 ## Verified behavior
 
-- Local production build and five core tests passed.
-- A clean Linux install with the committed pnpm lockfile passed its GitHub build and tests after correcting symlink resolution.
-- Browser import of a 268-page selectable-text PDF produced 79,511 words. All 21 reading sections completed; completed sections were reused on retry.
-- A 24-spread adaptation was produced. Editorial review found chronology, balance and ending omissions, so the demonstration draft was corrected and the general prompt was revised. The revised general prompt has not had a second paid full-novel adaptation run.
-- The corrected draft covers a chronological beginning, central journey, climax and resolution. It is saved separately from the public source.
-- Image generation succeeded on an earlier original-story test. The novel demonstration's character-reference request was rejected by the provider safety filter; no illustrations for that novel are claimed complete.
-- The original sample exported through the app to an eight-page portrait PDF. All pages were rendered with PDFium and inspected; text and images fit the pages.
-- The local desktop service started on its stable port without a bundled API key.
-- WebMCP spread navigation reached the last spread and rejected an out-of-range spread.
+- The production browser build, offline cache, and server worker build completed locally.
+- Seven core tests passed, including import validation, source splitting, local server behavior, cast matching for image references, and exact local export bytes without overwriting existing files.
+- Both selected books contain 12 illustrated spreads and 24 PDF pages. Their adaptation prose was manually reviewed and simplified. Each reaches the original ending.
+- Image review found extraneous cast members. Scene prompts now contain only named recurring characters, and image references require a matching cast. Revised scenes were inspected again.
+- The Time Machine also received three prop corrections so its machine is not present while missing in the story. The final riverbank, museum, and forest illustrations were inspected with the accompanying story.
+- Both exported PDFs were rendered into contact sheets and visually reviewed for page order, legible text, complete endings, and image placement. The PDFs use rasterized text.
+- Local exports save in Downloads/Picture Book. A browser Save link remains available as a fallback. Files are never overwritten; repeated exports receive numbered filenames.
+- Public editable examples have empty source.text fields. Uploaded PDFs and their extracted full text are not distributed.
+- The desktop server was previously verified on its stable local port without a bundled API key. The portable package is unsigned.
 
 ## Visual comparison ledger
 
@@ -26,7 +26,7 @@ The concept is `work/art/picture-book-editor-concept.png` in the development wor
 | Layout | Narrow page rail, central open book, right inspector | Same three-region editor; desktop frame checked at 1536px. |
 | Typography | Serif title, book text and controls | Georgia used consistently; document text scales with the page container. |
 | Palette | Warm ivory, dark ink, cobalt controls | Preserved with light rules and a restrained paper shadow. |
-| Artwork | Full-bleed watercolor opposite text and botanical detail | Dedicated sample images and botanical artwork; no tint overlay. Images are distinct production assets rather than a flattened concept screenshot. |
+| Artwork | Full-bleed watercolor opposite text and botanical detail | Reviewed showcase illustrations and botanical artwork; no tint overlay. Images are distinct production assets rather than a flattened concept screenshot. |
 | Responsive layout | Concept specifies desktop only | Mobile intentionally stacks art and text pages, moves the rail horizontally and places the inspector below. Body had no horizontal overflow at 390px. |
 | Navigation | Labeled desktop controls | Mobile hidden captions initially removed accessible names and hid the library. Added explicit labels and restored library access; the mobile library opened successfully. |
 
@@ -34,4 +34,4 @@ The editorial visual system was checked against the concept. Artwork crops, live
 
 ## Remaining limitations
 
-Public hosting is not deployed. The Windows package is unsigned. Real local-model services and PWA installation on physical mobile devices have not been tested. Automatic narrative fidelity and image consistency still require review. A provider rejection preserves the book but prevents the requested illustration from completing.
+Generated drafts still require editorial and visual review. The examples are reviewed adaptations, not unedited model output. Real local-model services and installation on physical mobile devices have not been tested. Public hosting is not deployed. Provider refusals stop the affected illustration while preserving completed work. No comparative claim against another app has been tested.
