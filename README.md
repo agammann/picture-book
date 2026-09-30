@@ -4,9 +4,9 @@ Turn a long or difficult book into a fun, easy-to-read picture book. Free softwa
 
 ## Use Picture Book online
 
-**[Open Picture Book](https://picture-book-studio.alx21.chatgpt.site)** — no download or installation required.
+**[Open Picture Book](https://picture-book-studio.alx21.chatgpt.site)** — no app installation required; model files download on first generation.
 
-Read Alice's Adventures in Wonderland immediately, or choose **New book** to upload your own book, paste text, or import a public web page. Connect your own generation service in **Settings** to adapt and illustrate a new book. Reading, manual editing, and exports are free; OpenAI generation uses your own provider credits.
+Read Alice's Adventures in Wonderland immediately, or choose **New book** to upload your own book, paste text, or import a public web page. Choose a browser text model in **Settings** or adapt a story directly. Generation uses your device, with no API key or paid AI API. Reading, editing, local imports and exports remain available without a model.
 
 Books stay in this browser on this device. Export an editable project to back up your work or move it to another device. The website requires an internet connection to open; the optional Windows version runs locally.
 
@@ -30,13 +30,13 @@ Make each story welcoming and easy to follow. Keep the important causes, choices
 - Import text PDFs, DOCX, text, Markdown, HTML, or a public web page.
 - Adapt a story into 8, 12, 16, 24, 32, or 48 pages, then edit every spread.
 - Choose an art style, reading level, and language. Simple language is the default: short sentences, familiar words, and a story that reaches its real ending.
-- Maintain a character description and visual reference across illustrations.
+- Maintain character descriptions and a visual reference for manual review. Browser illustration uses descriptions; it does not condition on reference images.
 - Generate one illustration or all missing illustrations; upload your own art.
 - Undo and redo edits, read a book full screen, or use the browser's read-aloud voice.
 - Save books on your device and export a printable PDF, an illustration PNG, or an editable project.
 - Read, edit, and export in your browser without installing an app. Books are saved in this browser; keep an exported project as a backup.
 
-Picture Book has no paywall or export watermark. Optional OpenAI generation is billed to **your own provider account**. Manual editing and exports need no paid service. Compatible local models can run through the local server or desktop app.
+Picture Book has no paywall or export watermark. Browser models process story and illustration prompts locally. Manual editing and exports need no model.
 
 ## Run locally
 
@@ -48,13 +48,7 @@ npm run build
 npm run preview
 ```
 
-Open **http://127.0.0.1:4173**. In Settings, connect an OpenAI API key for this tab. Alternatively, copy `.env.example` to `.env.local`, add your key, and start the local server with:
-
-```sh
-node --env-file=.env.local server/index.mjs
-```
-
-The server key stays on your computer. The public build contains no shared key. Keys entered in Settings stay in memory for the current session; refresh requires entering them again.
+Open **http://127.0.0.1:4173**. No provider key or environment variable is needed. Browser inference requires WebGPU and compatible graphics hardware.
 
 For a reproducible dependency install, use pnpm 11.19.0 with `pnpm install --frozen-lockfile`. The lockfile is included. CI checks the production build and core tests.
 
@@ -64,17 +58,23 @@ For development, run the local server in one terminal and `npm run dev` in anoth
 
 Run `npm run build`, then `npm run desktop`, or create a portable folder with `npm run desktop:pack`. The package uses the installed Electron runtime. Run `Picture Book.exe` and keep its accompanying files together. Desktop uses local port 4174 and a single application instance so the storage origin stays stable. The portable package is unsigned.
 
-## Local models
+## Browser models
 
-Choose **Local models** in Settings while using the local server or desktop build. Text uses Ollama at `127.0.0.1:11434`; set the name of a model you have installed. Images use a compatible Automatic1111 API at `127.0.0.1:7860` launched with API support. Hardware requirements and output quality depend on those models. This adapter has no reference-image conditioning; character descriptions are included in prompts. Install and configure the model services separately.
+The first run downloads model files from public hosts. Text generation runs in a dedicated browser worker using WebLLM; prompts are not sent to a hosted model. This workflow defaults to Qwen 3 4B. Smaller Qwen 3 1.7B and Llama 3.2 1B choices use less memory but can produce substantially weaker drafts. Model downloads are cached when browser storage permits.
+
+Use HTTPS (or localhost) and a current browser with WebGPU and compatible graphics hardware. A model choice does not guarantee that every device has enough memory. Download speed, inference speed and answer quality depend on the device and model. Stop a download or generation from the interface; errors preserve existing inputs. There is no paid model fallback. Hosting and model-download bandwidth remain separate from AI API fees.
+
+SD-Turbo provides 512 × 512 draft illustrations using ONNX Runtime Web and WebGPU. Its first download is about 2.4 GB. It uses more graphics memory than the text model, which is unloaded before drawing. Image prompts are limited by the model's short text encoder; scene or character details may be lost. Reference-image conditioning from the prior provider edition is unavailable. Upload your own art if quality, licensing or device support does not suit the project.
+
+The selected converted image weights retain their [noncommercial license](https://huggingface.co/schmuell/sd-turbo-ort-web/blob/main/LICENSE). MIT licensing of the application does not replace model licenses. The pipeline follows the MIT-licensed [Microsoft ONNX Runtime Web example](https://github.com/microsoft/onnxruntime-inference-examples/tree/main/js/sd-turbo).
 
 ## Import and export details
 
 PDFs must contain selectable text; scanned pages require OCR first. Files are limited to 25 MB, source text to 600,000 characters, and PDFs to 1,500 pages. Website import supports public HTTPS HTML/text pages; download a PDF or DOCX link and upload the file instead. Some websites block import.
 
-Generation is a draft: review names, facts, chronology, and visual continuity. Long books are condensed in sections, and details can be lost. Image consistency is an aim, not a guarantee. Longer books and image revisions use more provider credits.
+Generation is a draft: review names, facts, chronology, and visual continuity. Long books are condensed in sections, and details can be lost. The resulting source is divided in order before each spread is rewritten; this preserves the section order but does not prove that every generated sentence is faithful. Image consistency is an aim, not a guarantee. Longer books and image revisions require more time and graphics work on your device.
 
-Completed reading sections are cached on this device so retries can resume. Errors remain visible until dismissed. Finished illustrations are saved one at a time. A stopped or failed image request may still incur a provider charge.
+Completed reading sections are cached on this device so retries can resume. Errors remain visible until dismissed. Finished illustrations are saved one at a time. Stopping drawing terminates the image worker; already finished illustrations remain saved.
 
 Local and desktop exports are saved in **Downloads/Picture Book**, preserving existing files. Hosted web exports use your browser’s download flow and leave a Save link available. PDF exports have portrait pages matching the editor and rasterized text. Editable projects include the original source and all artwork. Export before clearing browser data or moving devices. Browser storage is not a cloud backup.
 
@@ -82,7 +82,7 @@ Use stories you own, have permission to adapt, or that are in the public domain.
 
 ## Privacy
 
-Books are saved in IndexedDB on your device. Importing a local file and manual editing happen locally. Choosing **Adapt story** sends source text to your selected text provider. Illustration generation sends prompts, page text, character descriptions, and any visual reference to your selected image provider. Website import sends the URL through the app's server. OpenAI text requests set `store: false`; provider retention policies still apply. There are no app accounts, analytics, or cloud book storage.
+Books are saved in IndexedDB on your device. File imports, editing, story adaptation and illustration prompts are processed locally. Public hosts supply SDK/runtime code and model weights. Website import sends only the requested URL through the app server. There are no app accounts, analytics or cloud book storage. Hosting, model hosts and imported sites may retain ordinary request metadata. Exports can contain original source and all artwork; treat them accordingly.
 
 ## Development and distribution
 

@@ -1,7 +1,7 @@
 import {publicUrl,readLimited} from '../shared/url-policy.mjs';
 export default {async fetch(request,env){
   const url=new URL(request.url);const json=(status,data)=>Response.json(data,{status,headers:{'Cache-Control':'no-store'}});
-  if(url.pathname==='/api/config')return json(200,{local:false,configured:false});
+  if(url.pathname==='/api/config')return json(200,{local:false,configured:true,browser:true,paidInference:false});
   if(url.pathname==='/api/import-url'){
     if(request.method!=='POST')return json(405,{error:'Method not allowed.'});
     if(request.headers.get('Origin')!==url.origin)return json(403,{error:'Origin not allowed.'});
@@ -15,6 +15,6 @@ export default {async fetch(request,env){
       }throw new Error('Too many redirects.');
     }catch(e){return json(400,{error:e.message});}
   }
-  if(url.pathname.startsWith('/api/'))return json(404,{error:'Connect your own generation service in Settings.'});
+  if(url.pathname.startsWith('/api/'))return json(404,{error:'Generation runs in your browser.'});
   return env.ASSETS.fetch(request);
 }};

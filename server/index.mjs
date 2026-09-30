@@ -20,7 +20,7 @@ async function website(input,depth=0){
     let size=0;const chunks=[];res.on('data',c=>{size+=c.length;if(size>3000000){req.destroy(new Error('This page is too large.'));return;}chunks.push(c);});res.on('end',()=>resolve({html:Buffer.concat(chunks).toString('utf8'),url:url.href}));res.on('error',reject);
   });req.on('timeout',()=>req.destroy(new Error('The website took too long to respond.')));req.on('error',reject);});
 }
-export async function startServer({port=4173,key=process.env.OPENAI_API_KEY||'',staticDir=path.join(root,'dist/client'),exportDirectory=path.join(os.homedir(),'Downloads','Picture Book')}={}){
+export async function startServer({port=4173,staticDir=path.join(root,'dist/client'),exportDirectory=path.join(os.homedir(),'Downloads','Picture Book')}={}){
   let server;server=http.createServer(async(req,res)=>{
     const json=(status,value)=>{res.writeHead(status,{'Content-Type':'application/json','Cache-Control':'no-store'}).end(JSON.stringify(value));};
     try{
@@ -30,7 +30,7 @@ export async function startServer({port=4173,key=process.env.OPENAI_API_KEY||'',
       if(url.pathname.startsWith('/api/')){
         const incomingOrigin=req.headers.origin;
         if(incomingOrigin && ![origin,`http://localhost:${actualPort}`,'http://127.0.0.1:5173'].includes(incomingOrigin)){json(403,{error:'Origin not allowed.'});return;}
-        if(url.pathname==='/api/config'&&req.method==='GET'){json(200,{local:true,configured:!!key,localExports:true});return;}
+        if(url.pathname==='/api/config'&&req.method==='GET'){json(200,{local:true,configured:true,browser:true,paidInference:false,localExports:true});return;}
         if(req.method!=='POST'){json(405,{error:'Method not allowed.'});return;}
         if(url.pathname==='/api/export'){
           if(![origin,`http://localhost:${actualPort}`,'http://127.0.0.1:5173'].includes(incomingOrigin)){json(403,{error:'Open Picture Book to save an export.'});return;}
@@ -43,21 +43,7 @@ export async function startServer({port=4173,key=process.env.OPENAI_API_KEY||'',
           json(200,{saved:true,path:saved});return;
         }
         if(url.pathname==='/api/import-url'){const {url:source}=JSON.parse(await body(req,10000));json(200,await website(source));return;}
-        if(url.pathname.startsWith('/api/openai/')){
-          if(!key){json(401,{error:'Connect your OpenAI key in Settings.'});return;}
-          const endpoint=url.pathname.slice('/api/openai/'.length);
-          if(!['responses','images/generations','images/edits','moderations'].includes(endpoint)){json(404,{error:'Unknown endpoint.'});return;}
-          const payload=await body(req);const aborter=new AbortController();res.on('close',()=>{if(!res.writableEnded)aborter.abort();});
-          const result=await fetch('https://api.openai.com/v1/'+endpoint,{method:'POST',headers:{Authorization:`Bearer ${key}`,'Content-Type':req.headers['content-type']||'application/json'},body:payload,signal:AbortSignal.any([aborter.signal,AbortSignal.timeout(240000)])});
-          res.writeHead(result.status,{'Content-Type':'application/json','Cache-Control':'no-store'}).end(await result.text());return;
-        }
-        if(url.pathname.startsWith('/api/local/')){
-          const service=url.pathname.slice('/api/local/'.length);
-          const targets={story:'http://127.0.0.1:11434/api/generate',image:'http://127.0.0.1:7860/sdapi/v1/txt2img'};
-          if(!targets[service]){json(404,{error:'Unknown local service.'});return;}
-          const result=await fetch(targets[service],{method:'POST',headers:{'Content-Type':'application/json'},body:await body(req),signal:AbortSignal.timeout(300000)});
-          res.writeHead(result.status,{'Content-Type':'application/json','Cache-Control':'no-store'}).end(await result.text());return;
-        }
+        if(url.pathname.startsWith('/api/openai/')||url.pathname.startsWith('/api/local/')){json(410,{error:'Generation now runs in your browser.'});return;}
         json(404,{error:'Unknown endpoint.'});return;
       }
       if(!['GET','HEAD'].includes(req.method)){res.writeHead(405).end();return;}
