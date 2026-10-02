@@ -92,7 +92,14 @@ export async function generate(messages, { schema, maxTokens = 1600, signal } = 
       stream: false,
       ...(schema ? { response_format: { type: 'json_object', schema: JSON.stringify(schema) } } : {}),
       extra_body: { enable_thinking: false },
-    }), generationSignal, () => local.interruptGenerate());
+    }), generationSignal, () => {
+      // WebLLM's interrupted engine can return an empty completion on reuse.
+      // Recreate it from the cached weights for the next task.
+      try { local.interruptGenerate(); } finally {
+        worker?.terminate(); worker = engine = undefined;
+        publish({ phase: 'idle', progress: 0, text: 'Generation stopped. The next task will reload the cached model.' });
+      }
+    });
     aborted(signal);
     const choice = response.choices?.[0];
     if (!choice?.message?.content) throw Error('The model returned no result. Try a shorter input.');

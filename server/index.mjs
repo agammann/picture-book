@@ -6,10 +6,27 @@ import path from 'node:path';
 import os from 'node:os';
 import {fileURLToPath} from 'node:url';
 import {publicUrl,isPublicIP} from '../shared/url-policy.mjs';
+import {visitorAdaptation} from './visitor-adaptation.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const types={'.html':'text/html; charset=utf-8','.js':'text/javascript','.mjs':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png','.json':'application/json','.webmanifest':'application/manifest+json','.wasm':'application/wasm'};
 export function pinnedLookup(addresses){return (_hostname,options,callback)=>{if(options?.all)callback(null,addresses.map(address=>({address,family:4})));else callback(null,addresses[0],4);};}
 async function body(req,limit=25000000){let out=[];let size=0;for await(const c of req){size+=c.length;if(size>limit)throw new Error('Request is too large.');out.push(c);}return Buffer.concat(out);}
+// Cancelling an unread body must not destroy the socket before its error response.
+function visitorRequestBody(req){
+  let cancelled=false,cleanup;
+  const stream=new ReadableStream({
+    start(controller){
+      const data=chunk=>{controller.enqueue(chunk);if(controller.desiredSize<=0)req.pause();};
+      const end=()=>{cleanup();controller.close();};
+      const error=value=>{cleanup();controller.error(value);};
+      cleanup=()=>{req.removeListener('data',data);req.removeListener('end',end);req.removeListener('error',error);};
+      req.on('data',data);req.once('end',end);req.once('error',error);req.pause();
+    },
+    pull(){req.resume();},
+    cancel(){cancelled=true;cleanup();req.pause();},
+  });
+  return {stream,get cancelled(){return cancelled;}};
+}
 async function website(input,depth=0){
   if(depth>4)throw new Error('Too many redirects.');const url=publicUrl(input);
   const addresses=await dns.resolve4(url.hostname);if(!addresses.length||addresses.some(a=>!isPublicIP(a)))throw new Error('This address is not a public website.');
@@ -20,7 +37,7 @@ async function website(input,depth=0){
     let size=0;const chunks=[];res.on('data',c=>{size+=c.length;if(size>3000000){req.destroy(new Error('This page is too large.'));return;}chunks.push(c);});res.on('end',()=>resolve({html:Buffer.concat(chunks).toString('utf8'),url:url.href}));res.on('error',reject);
   });req.on('timeout',()=>req.destroy(new Error('The website took too long to respond.')));req.on('error',reject);});
 }
-export async function startServer({port=4173,staticDir=path.join(root,'dist/client'),exportDirectory=path.join(os.homedir(),'Downloads','Picture Book')}={}){
+export async function startServer({port=4173,staticDir=path.join(root,'dist/client'),exportDirectory=path.join(os.homedir(),'Downloads','Picture Book'),visitorFetch}={}){
   let server;server=http.createServer(async(req,res)=>{
     const json=(status,value)=>{res.writeHead(status,{'Content-Type':'application/json','Cache-Control':'no-store'}).end(JSON.stringify(value));};
     try{
@@ -30,7 +47,27 @@ export async function startServer({port=4173,staticDir=path.join(root,'dist/clie
       if(url.pathname.startsWith('/api/')){
         const incomingOrigin=req.headers.origin;
         if(incomingOrigin && ![origin,`http://localhost:${actualPort}`,'http://127.0.0.1:5173'].includes(incomingOrigin)){json(403,{error:'Origin not allowed.'});return;}
-        if(url.pathname==='/api/config'&&req.method==='GET'){json(200,{local:true,configured:true,browser:true,paidInference:false,localExports:true});return;}
+        if(url.pathname==='/api/config'&&req.method==='GET'){json(200,{local:true,configured:true,browser:true,paidInference:false,visitorHosted:true,visitorModel:'gpt-5.4',localExports:true});return;}
+        if(url.pathname==='/api/adapt/visitor'){
+          const controller=new AbortController();
+          const abort=()=>controller.abort();
+          const disconnected=()=>{if(!res.writableEnded)abort();};
+          req.once('aborted',abort);req.once('error',abort);res.once('close',disconnected);
+          try{
+            const incoming=!['GET','HEAD'].includes(req.method)?visitorRequestBody(req):null;
+            const request=new Request(new URL(req.url,`http://${req.headers.host}`),{method:req.method,headers:req.headers,signal:controller.signal,...(incoming?{body:incoming.stream,duplex:'half'}:{})});
+            const response=await visitorAdaptation(request,visitorFetch?{fetchImpl:visitorFetch}:{});
+            await request.body?.cancel().catch(()=>{});
+            if(incoming?.cancelled){
+              // Discard remaining transport bytes so the client can receive the error
+              // without a TCP reset. Do not retain or forward them; bound the drain.
+              req.resume();
+              if(!req.complete){const drain=setTimeout(()=>req.destroy(),5000);drain.unref();const done=()=>clearTimeout(drain);req.once('end',done);req.once('close',done);}
+            }
+            if(!res.destroyed){res.writeHead(response.status,Object.fromEntries(response.headers));res.end(Buffer.from(await response.arrayBuffer()));}
+          }finally{req.removeListener('aborted',abort);if(req.complete)req.removeListener('error',abort);res.removeListener('close',disconnected);}
+          return;
+        }
         if(req.method!=='POST'){json(405,{error:'Method not allowed.'});return;}
         if(url.pathname==='/api/export'){
           if(![origin,`http://localhost:${actualPort}`,'http://127.0.0.1:5173'].includes(incomingOrigin)){json(403,{error:'Open Picture Book to save an export.'});return;}
@@ -51,6 +88,7 @@ export async function startServer({port=4173,staticDir=path.join(root,'dist/clie
       if(!file.startsWith(path.resolve(staticDir)+path.sep)&&file!==path.resolve(staticDir)){res.writeHead(403).end();return;}
       if(fs.existsSync(file)&&fs.statSync(file).isDirectory())file=path.join(file,'index.html');
       if(!fs.existsSync(file))file=path.join(staticDir,'index.html');
+      if(!fs.existsSync(file)){res.writeHead(503,{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'}).end('The editor has not been built. Run npm run build, then reload this page.');return;}
       res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','no-referrer');
       res.setHeader('Content-Type',types[path.extname(file)]||'application/octet-stream');res.setHeader('Cache-Control','no-cache');
       if(req.method==='HEAD'){res.end();return;}fs.createReadStream(file).pipe(res);
