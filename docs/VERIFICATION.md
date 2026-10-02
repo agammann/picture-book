@@ -1,6 +1,28 @@
-# Browser migration verification — September 30, 2026
+# Verification — October 2, 2026
 
-The website no longer invokes a paid model provider. Story rewriting uses a browser text model; illustrations use WebGPU and SD-Turbo through ONNX Runtime Web. An old operator key cannot reactivate retired generation routes.
+The current app offers device generation and optional visitor-funded GPT-5.4 text adaptation. These checks used Windows, Edge 154, Node 24.19, and an AMD RDNA 3 WebGPU adapter with shader-f16 support. They establish the observed paths below, not universal device support or model accuracy.
+
+- The production client and Worker build passed. All 27 automated tests passed, covering ordered source sections, exact manual pagination, import size cancellation, safe local imports/exports, hosted request boundaries, provider failures, malformed responses, cancellation, and client disconnection.
+- A real Qwen 3 4B adaptation completed. Review found that it incorrectly listed the lighthouse and lantern as characters and wrote weak or underspecified scenes. The device mode remains a draft tool requiring editorial review. The smaller model choices were not included in this check.
+- A stopped Qwen generation initially left the next call returning no result. Resetting the worker fixed the observed path: cancellation preserved the open book and immediate retry completed four spreads in about 77 seconds using cached weights.
+- SD-Turbo generated a real 512 × 512 blue-lantern illustration after cancelling its first model download. Download, preparation and drawing completed in about 61 seconds on this run. The output showed a blue lantern with glass on a shelf. This single scene does not establish cast consistency or general image quality. The converted weights retain their noncommercial license.
+- Two fixed fictional stories each used one real GPT-5.4 request, taking about 7 and 11 seconds. The first retained the plot, fragile-frame cause, ending and correct named cast, but added unsupported scene locations. A general location-grounding instruction was added afterward; that story was not rerun. The second preserved the distinction between people, a dog, a station name and an inscription, as well as the flood, missing train and uncertain ending. It passed the seven criteria fixed before generation. These are two examples, not a broad quality benchmark.
+- Both hosted books exported successfully with their original source intact. Checks found no key in Web Storage, IndexedDB or exported projects. Clear key, mode switch and reload removed the key. A controlled held-request UI check verified Stop clearing the key without a provider call. Unit checks cover pending-request/body cancellation, image-conversion cancellation, and aborting upstream work when a local client disconnects.
+- The compiled Worker ran in actual workerd through Wrangler 4.92. A synthetic invalid key reached OpenAI and returned a sanitized 401. Missing key, foreign origin, unsupported method, configuration and static asset paths also passed. No paid inference ran in that runtime check.
+- Actual TXT, Markdown, HTML, selectable-text PDF, DOCX and public HTTPS imports passed. An oversized HTML source was rejected without truncation. Cancelling the file picker preserved the open dialog and source.
+- Manual creation produced exactly the selected four spreads and retained the ending. Editing, undo/redo, add/delete, project reimport, library use and read-mode navigation passed. Real PDF, PNG and editable-project exports were inspected; Alice's export had all 24 readable pages. Editing and project export also worked in an already-open offline session; opening the website offline was not claimed.
+- The editor, new-book dialog, character panel and library had no horizontal overflow at 1440, 390 or 320 pixels. The native WebMCP `read_picture_book` and `show_picture_book_spread` tools executed in Edge with its experimental feature enabled. Both tools also executed after an actual back/forward-cache restoration, and the temporary key was cleared. Other browser-agent integrations were not covered.
+- The Windows portable folder was built using Electron 43.4.1 and actually launched on local port 4174 with an isolated profile. Manual editing persisted through reload, and the hosted route rejected an absent key. Device inference was tested in Edge, not repeated in Electron. The package remains unsigned.
+
+Generated content always needs review. Structural validation cannot establish source fidelity, and a successful image or story on this machine cannot establish compatibility on every phone or graphics adapter. Private test fixtures and verification credentials are excluded from this repository and its source archive.
+
+## Historical checks
+
+The records below describe earlier revisions and examples; they are not additional tests of the current hosted mode.
+
+# Earlier browser migration — September 30, 2026
+
+At that revision, the website did not invoke a paid model provider. Story rewriting uses a browser text model; illustrations use WebGPU and SD-Turbo through ONNX Runtime Web. An old operator key cannot reactivate retired generation routes.
 
 - The final production browser and worker build completed locally.
 - Ten automated tests passed, including source-section ordering and completeness, invalid layouts, import limits, local-origin protections, portable project validation and exact export bytes.
