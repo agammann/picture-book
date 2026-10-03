@@ -6,7 +6,7 @@ The current app offers device generation and optional visitor-funded GPT-5.4 tex
 - A real Qwen 3 4B adaptation completed. Review found that it incorrectly listed the lighthouse and lantern as characters and wrote weak or underspecified scenes. The device mode remains a draft tool requiring editorial review. The smaller model choices were not included in this check.
 - A stopped Qwen generation initially left the next call returning no result. Resetting the worker fixed the observed path: cancellation preserved the open book and immediate retry completed four spreads in about 77 seconds using cached weights.
 - SD-Turbo generated a real 512 × 512 blue-lantern illustration after cancelling its first model download. Download, preparation and drawing completed in about 61 seconds on this run. The output showed a blue lantern with glass on a shelf. This single scene does not establish cast consistency or general image quality. The converted weights retain their noncommercial license.
-- Two fixed fictional stories each used one real GPT-5.4 request, taking about 7 and 11 seconds. The first retained the plot, fragile-frame cause, ending and correct named cast, but added unsupported scene locations. A general location-grounding instruction was added afterward; that story was not rerun. The second preserved the distinction between people, a dog, a station name and an inscription, as well as the flood, missing train and uncertain ending. It passed the seven criteria fixed before generation. These are two examples, not a broad quality benchmark.
+- Two fixed fictional stories each used one real GPT-5.4 request, taking about 7 and 11 seconds. The first retained the plot, fragile-frame cause, ending and correct named cast, but added unsupported scene locations. A general location-grounding instruction was added afterward; that story was not rerun during this earlier check. The second preserved the distinction between people, a dog, a station name and an inscription, as well as the flood, missing train and uncertain ending. It passed the seven criteria fixed before generation. These are two examples, not a broad quality benchmark.
 - Both hosted books exported successfully with their original source intact. Checks found no key in Web Storage, IndexedDB or exported projects. Clear key, mode switch and reload removed the key. A controlled held-request UI check verified Stop clearing the key without a provider call. Unit checks cover pending-request/body cancellation, image-conversion cancellation, and aborting upstream work when a local client disconnects.
 - The compiled Worker ran in actual workerd through Wrangler 4.92. A synthetic invalid key reached OpenAI and returned a sanitized 401. Missing key, foreign origin, unsupported method, configuration and static asset paths also passed. No paid inference ran in that runtime check.
 - Actual TXT, Markdown, HTML, selectable-text PDF, DOCX and public HTTPS imports passed. An oversized HTML source was rejected without truncation. Cancelling the file picker preserved the open dialog and source.
@@ -15,6 +15,19 @@ The current app offers device generation and optional visitor-funded GPT-5.4 tex
 - The Windows portable folder was built using Electron 43.4.1 and actually launched on local port 4174 with an isolated profile. Manual editing persisted through reload, and the hosted route rejected an absent key. Device inference was tested in Edge, not repeated in Electron. The package remains unsigned.
 
 Generated content always needs review. Structural validation cannot establish source fidelity, and a successful image or story on this machine cannot establish compatibility on every phone or graphics adapter. Private test fixtures and verification credentials are excluded from this repository and its source archive.
+
+## Production hosted-text follow-up — October 3, 2026 (UTC)
+
+The [published Studio](https://picture-book-studio.alx21.chatgpt.site) v4, source `a243cc26940b732794cf9eaa514d1fe372a8e06e`, was checked in Edge **154.0.4258.48**. Each short fictional English story produced four spreads through the deployed Worker with exactly one GPT-5.4 request and no retry. Both returned HTTP 200. Independent review compared the actual responses with the unchanged criteria fixed before generation.
+
+| Story | Time | Criteria passed | Observed result |
+| --- | --- | --- | --- |
+| Willow Station | 17.9 seconds | 7 of 7 | Preserved the cast, sequence, dog waiting outside, flood and missing train, bell custody, and unresolved ending. |
+| Lantern | 6.4 seconds | 11 of 11 | Preserved the joint repair, fragile-frame cause, sunset return, bread gift and ending; cast and scene grounding met the criteria. |
+
+Both books rendered and downloaded with their original source intact and their cast and four spreads matching the responses. The key was absent from exported projects and browser storage. Clear key, switching modes and reload removed it while the generated book survived reload. Layout checks passed at 1440, 390 and 320 pixels, with no page or console errors.
+
+The earlier Lantern result remains **10 of 11**: it invented a workroom and placed the thank-you outside the lighthouse. The later pass does not establish general adaptation quality. Appearance details remain visual interpretations, and generated books still need editorial review. These two production calls did not generate illustrations or repeat device-model, Electron or native WebMCP checks; their earlier limits remain unchanged.
 
 ## Historical checks
 
