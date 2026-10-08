@@ -12,3 +12,9 @@
 @media(max-width:600px){.book-spread{container-type:inline-size}.text-page{aspect-ratio:auto;min-height:140cqw}.text-page .page-copy{top:auto;max-height:none;overflow:visible;padding:18% 12% 38%}.text-page .botanical{height:16%;width:35%}}
 @media(max-width:400px){.options-grid{grid-template-columns:1fr}}
 .import-error{padding:12px 14px;border:1px solid #b95545;border-radius:5px;background:#fff8f4;color:#743626;font:14px/1.5 system-ui,sans-serif}
+
+body:has(.toast) .download-ready{top:80px;bottom:auto}
+
+.canvas-area{container-type:inline-size}
+@container(max-width:620px){.canvas-footer{height:130px;flex-direction:column;gap:12px}.canvas-tools{position:static}}
+@media(max-width:760px){.canvas-footer{height:auto;min-height:105px;flex-wrap:wrap;gap:12px;padding:12px}.canvas-tools{display:flex;position:static;gap:5px}}

@@ -3,19 +3,102 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: picture-book-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 24
-      - uses: pnpm/action-setup@v4
+          node-version: 24.19.0
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
         with:
           version: 11.19.0
+      - if: runner.os == 'Windows'
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
       - run: pnpm install --frozen-lockfile --ignore-scripts
-      - run: pnpm build
-      - run: pnpm test
+      - if: runner.os == 'Windows'
+        run: node node_modules/electron/install.js
+      - run: pnpm check
+      - if: always()
+        shell: bash
+        run: |
+          mkdir -p reports
+          pnpm audit --json > reports/dependency-audit.raw.json
+      - if: runner.os == 'Linux'
+        run: pnpm exec playwright install --with-deps chromium
+      - if: runner.os == 'Windows'
+        run: pnpm exec playwright install chromium
+      - run: pnpm test:browser
+      - if: runner.os == 'Windows'
+        run: pnpm package:release
+      - if: runner.os == 'Windows'
+        run: python scripts/unpack-release.py --out ../picture-book-release-consumer
+      - if: runner.os == 'Windows'
+        working-directory: ../picture-book-release-consumer/source
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - if: runner.os == 'Windows'
+        working-directory: ../picture-book-release-consumer/source
+        run: pnpm check
+      - if: runner.os == 'Windows'
+        working-directory: ../picture-book-release-consumer/source
+        env:
+          PICTURE_BOOK_TEST_CHROME: ""
+        run: pnpm test:browser
+      - if: runner.os == 'Windows'
+        working-directory: ../picture-book-release-consumer/source
+        env:
+          PICTURE_BOOK_TEST_DESKTOP: ${{ runner.workspace }}/picture-book-release-consumer/windows/Picture Book.exe
+          PICTURE_BOOK_TEST_APP: ${{ runner.workspace }}/picture-book-release-consumer/windows/resources/app
+        run: pnpm test:desktop
+      - if: runner.os == 'Windows'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: picture-book-release
+          path: release-artifacts/
+          if-no-files-found: error
+          overwrite: true
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: checks-${{ runner.os }}
+          path: |
+            test-results/
+            reports/dependency-audit.raw.json
+            ${{ runner.workspace }}/picture-book-release-consumer/source/test-results/
+          retention-days: 7
+          overwrite: true
+  publish:
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: picture-book-release
+          path: release-artifacts
+      - uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        with:
+          script: |
+            const { default: publish } = await import(process.env.GITHUB_WORKSPACE + '/scripts/release.mjs');
+            await publish({ github, context, core });

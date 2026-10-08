@@ -1,10 +1,11 @@
+import {VERSION} from '../../shared/version.mjs';
 import React from 'react';
 import {Modal,Field} from './Modal';
 import BrowserModelPanel from './browser-model-panel';
 export default function Settings({settings,onChange,onSave,onClose}){
  const hosted=settings.provider==='visitor';
  return <Modal title="Your workspace" onClose={onClose}>
-  <p className="intro">Your books stay in this browser. Export a project to keep a portable backup.</p>
+  <p className="note">Picture Book {VERSION}</p><p className="intro">Your books stay in this browser. Export a project to keep a portable backup.</p>
   <Field label="Story generation"><select value={settings.provider||'browser'} onChange={e=>onChange({provider:e.target.value,apiKey:''})}><option value="browser">On this device · browser model</option><option value="visitor">Hosted text · GPT-5.4 · your API key</option></select></Field>
   {hosted?<section aria-label="Hosted text generation">
    <p className="note">GPT-5.4 uses your OpenAI API account and can incur charges. Your source text and adaptation settings pass through this app’s server to OpenAI. Illustrations continue to use the device model or your uploaded art.</p>

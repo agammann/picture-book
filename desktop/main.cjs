@@ -1,5 +1,7 @@
 const {app,BrowserWindow,shell}=require('electron');
 const path=require('node:path');const {pathToFileURL}=require('node:url');
+const dataArgument=process.argv.find(arg=>arg.startsWith('--data-dir='));
+if(dataArgument){const directory=dataArgument.slice('--data-dir='.length);if(!path.isAbsolute(directory))throw new Error('--data-dir must be an absolute profile path.');app.setPath('userData',directory);}
 let server;
 if(!app.requestSingleInstanceLock()){app.quit();return;}
 app.whenReady().then(async()=>{

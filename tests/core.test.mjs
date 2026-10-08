@@ -46,7 +46,7 @@ test('website lookup supports both Node DNS callback forms using only resolved a
 test('local server serves editor, rejects foreign origins and never returns its key',async t=>{
  const server=await startServer({port:0,key:'test-only-noncredential'});t.after(()=>new Promise(resolve=>server.close(resolve)));
  const origin=`http://127.0.0.1:${server.address().port}`;
- const config=await (await fetch(origin+'/api/config')).json();assert.deepEqual(config,{local:true,configured:true,browser:true,paidInference:false,visitorHosted:true,visitorModel:'gpt-5.4',localExports:true});
+ const config=await (await fetch(origin+'/api/config')).json();assert.deepEqual(config,{local:true,configured:true,version:'1.0.0',browser:true,paidInference:false,visitorHosted:true,visitorModel:'gpt-5.4',localExports:true});
  const rejected=await fetch(origin+'/api/openai/responses',{method:'POST',headers:{Origin:'https://unrelated.example','Content-Type':'application/json'},body:'{}'});assert.equal(rejected.status,403);
  assert.equal((await fetch(origin+'/api/openai/unknown',{method:'POST',body:'{}'})).status,410);
  assert.equal((await fetch(origin+'/api/openai/responses',{method:'POST',headers:{Origin:origin},body:'{}'})).status,410);
@@ -70,4 +70,13 @@ test('preview before a build returns an actionable response instead of hanging',
  t.after(async()=>{await new Promise(resolve=>server.close(resolve));await fs.rm(directory,{recursive:true,force:true});});
  const response=await fetch(`http://127.0.0.1:${server.address().port}/`);
  assert.equal(response.status,503);assert.match(await response.text(),/npm run build/);
+});
+
+test('project recovery preserves exact source, captions, URLs and safe new identities',()=>{
+ const original={...newBook('Backup'),source:{name:'Owned source',text:'  First line.\n\nLast line.\n',url:'https://example.com/story'},characters:[{name:'Mira',description:'Orange coat'}],pages:[{id:'spread-one',title:' Start ',text:'Exact words.\n',scene:'On the path.',sourceNote:'A verified note.\n',image:'',alt:'Our art.'}]};
+ const imported=validateBook(original);assert.deepEqual(imported.source,original.source);assert.equal(imported.pages[0].text,original.pages[0].text);assert.equal(imported.pages[0].sourceNote,original.pages[0].sourceNote);assert.notEqual(imported.id,original.id);assert.notEqual(imported.pages[0].id,original.pages[0].id);
+ const saved=validateBook(original,{preserveIdentity:true});assert.equal(saved.id,original.id);assert.equal(saved.pages[0].id,'spread-one');assert.deepEqual(saved.source,original.source);
+ assert.throws(()=>validateBook({...original,source:{text:'x'.repeat(600001)}}),/original source/);
+ assert.throws(()=>validateBook({...original,pages:[original.pages[0],original.pages[0]]},{preserveIdentity:true}),/spread identities/);
+ assert.throws(()=>validateBook({...original,pages:[{...original.pages[0],text:42}]}),/spread text/);
 });

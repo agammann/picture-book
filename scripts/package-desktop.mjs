@@ -1,18 +1,18 @@
-import fs from 'node:fs/promises';
-import path from 'node:path';
-import {createRequire} from 'node:module';
-const require=createRequire(import.meta.url);const electron=require('electron');
-const destination=path.resolve(process.argv[2]||'../../outputs/Picture-Book-Windows');
-if(process.platform!=='win32')throw new Error('Build the Windows portable package on Windows.');
-if(destination===path.parse(destination).root||destination===process.cwd())throw new Error('Choose a separate output folder.');
-await fs.mkdir(destination,{recursive:true});await fs.cp(path.dirname(electron),destination,{recursive:true});
-await fs.rename(path.join(destination,'electron.exe'),path.join(destination,'Picture Book.exe'));
-const app=path.join(destination,'resources','app');await fs.mkdir(app,{recursive:true});
+import fs from 'node:fs/promises';import path from 'node:path';import {createRequire} from 'node:module';
+const require=createRequire(import.meta.url),electron=require('electron');const source=JSON.parse(await fs.readFile('package.json','utf8'));
+const destination=path.resolve(process.argv[2]||`release/Picture-Book-Windows-${source.version}`);
+if(process.platform!=='win32')throw new Error('Build the Windows portable folder on Windows.');
+if(destination===path.parse(destination).root||destination===process.cwd()||destination.startsWith(path.resolve('node_modules')+path.sep))throw new Error('Choose a separate output folder.');
+try{await fs.access(destination);throw new Error('Output already exists. Choose a new empty destination.');}catch(error){if(error.code!=='ENOENT')throw error;}
+await fs.mkdir(destination,{recursive:true});await fs.cp(path.dirname(electron),destination,{recursive:true});await fs.rename(path.join(destination,'electron.exe'),path.join(destination,'Picture Book.exe'));
+const app=path.join(destination,'resources/app');await fs.mkdir(app,{recursive:true});
 for(const dir of ['desktop','server','shared','dist/client'])await fs.cp(dir,path.join(app,dir),{recursive:true});
-await fs.copyFile('LICENSE',path.join(app,'LICENSE'));
-const readme=(await fs.readFile('README.md','utf8')).replace(/\]\((examples\/[^)]+)\)/g,'](https://github.com/agammann/picture-book/blob/main/$1)');
-await fs.writeFile(path.join(app,'README.md'),readme);
-const source=JSON.parse(await fs.readFile('package.json','utf8'));
-await fs.writeFile(path.join(app,'package.json'),JSON.stringify({name:source.name,version:source.version,main:'desktop/main.cjs',type:'module',license:source.license},null,2));
-await fs.writeFile(path.join(destination,'START-HERE.txt'),'Picture Book\r\n\r\nRun Picture Book.exe. Keep all the files in this folder together.\r\nYour books are stored in the application profile on this computer. Export a project to back them up.\r\nDevice generation needs WebGPU and compatible graphics hardware. Model files download on first use; no key is needed. Optional hosted text in Settings uses your own OpenAI key and can incur API charges. Illustrations remain local and have a separate noncommercial model license.\r\nThis is an unsigned portable Windows build.\r\n');
+for(const file of ['LICENSE','THIRD_PARTY_NOTICES.md'])await fs.copyFile(file,path.join(app,file));
+await fs.cp('docs',path.join(app,'docs'),{recursive:true});
+const readme=(await fs.readFile('README.md','utf8')).replace(/\]\((examples\/[^)]+)\)/g,`](https://github.com/agammann/picture-book/blob/v${source.version}/$1)`);await fs.writeFile(path.join(app,'README.md'),readme);
+await fs.writeFile(path.join(app,'package.json'),JSON.stringify({name:source.name,version:source.version,main:'desktop/main.cjs',type:'module',license:source.license},null,2)+'\n');
+// Retain available dependency licenses alongside Electron's own LICENSE and LICENSES.chromium.html.
+const notices=path.join(app,'third-party');await fs.mkdir(notices,{recursive:true});
+for(const entry of await fs.readdir('node_modules/.pnpm',{withFileTypes:true})){if(!entry.isDirectory()||entry.name==='node_modules')continue;const base=path.join('node_modules/.pnpm',entry.name,'node_modules');let names;try{names=await fs.readdir(base,{withFileTypes:true});}catch{continue;}for(const item of names){if(item.isSymbolicLink())continue;const packages=item.name.startsWith('@')?await fs.readdir(path.join(base,item.name),{withFileTypes:true}):[item];for(const pkg of packages){if(!pkg.isDirectory()||pkg.isSymbolicLink())continue;const dir=item.name.startsWith('@')?path.join(base,item.name,pkg.name):path.join(base,pkg.name);for(const name of await fs.readdir(dir)){if(!/^(license|copying|notice)([._-]|$)/i.test(name))continue;const location=path.join(dir,name);if(!(await fs.stat(location)).isFile())continue;const output=path.join(notices,entry.name,name);await fs.mkdir(path.dirname(output),{recursive:true});await fs.copyFile(location,output);}}}}
+await fs.writeFile(path.join(destination,'START-HERE.txt'),`Picture Book ${source.version}\r\n\r\nExtract the entire ZIP, then run Picture Book.exe. Keep all accompanying files together. Windows x64; this portable build is unsigned.\r\nReading, editing, manual art and export need no key/model download.\r\nBooks are stored in the application profile on this computer, not alongside the EXE. Export editable projects before upgrading or clearing app data. Extract upgrades to another folder, quit the previous instance, then launch the new one; the stable local origin retains your library.\r\nDevice text and SD-Turbo images are drafts requiring review. You can replace each picture in Art > Upload your own art. Image weights have a separate noncommercial license. Optional hosted text uses your OpenAI key and can incur charges.\r\nLocal port 4174 must be free. Exports go to Downloads/Picture Book. See resources/app/docs/INSTALLATION.md and RECOVERY.md for setup and recovery.\r\n`);
 console.log(destination);

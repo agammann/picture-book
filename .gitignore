@@ -9,4 +9,6 @@ release/
 *.log
 test-results/
 playwright-report/
+reports/
 .DS_Store
+release-artifacts/

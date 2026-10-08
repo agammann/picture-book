@@ -1,0 +1,10 @@
+import {execFileSync} from 'node:child_process';import {readFileSync,mkdirSync,writeFileSync,existsSync} from 'node:fs';import {createHash} from 'node:crypto';import path from 'node:path';
+const git=args=>execFileSync('git',args,{encoding:'utf8',windowsHide:true}).trim();
+if(process.platform!=='win32')throw Error('The paired source/Windows release is built on Windows.');
+if(path.resolve(git(['rev-parse','--show-toplevel']))!==process.cwd()||git(['status','--porcelain','--untracked-files=normal']))throw Error('Package a clean committed source tree.');
+const pkg=JSON.parse(readFileSync('package.json','utf8')),commit=git(['rev-parse','HEAD']);const {VERSION}=await import('../shared/version.mjs');if(VERSION!==pkg.version)throw Error('Source and application versions differ.');if(process.env.GITHUB_SHA&&process.env.GITHUB_SHA!==commit)throw Error('Workflow checkout differs from the checked commit.');
+const directory=path.resolve('release-artifacts');mkdirSync(directory,{recursive:true});const stage=path.resolve(`release/${commit}/Picture-Book-Windows-${pkg.version}`);if(existsSync(stage))throw Error('Desktop staging folder already exists. Choose a fresh checkout.');
+execFileSync(process.execPath,['scripts/package-source.mjs'],{stdio:'inherit',windowsHide:true});execFileSync(process.execPath,['scripts/package-desktop.mjs',stage],{stdio:'inherit',windowsHide:true});
+writeFileSync(path.join(stage,'resources/app/RELEASE.json'),JSON.stringify({name:pkg.name,version:pkg.version,commit},null,2)+'\n');const windows=`picture-book_${pkg.version}_windows-x64.zip`;
+await (await import('./zip-directory.mjs')).zipDirectory(stage,path.join(directory,windows));
+const lines=[];for(const filename of [`picture-book_${pkg.version}_source.zip`,windows]){const checksum=createHash('sha256').update(readFileSync(path.join(directory,filename))).digest('hex')+'  '+filename+'\n';writeFileSync(path.join(directory,filename+'.sha256'),checksum);lines.push(checksum);}writeFileSync(path.join(directory,'SHA256SUMS'),lines.join(''));console.log(`Packaged Picture Book ${pkg.version} source and Windows x64 from ${commit}`);
