@@ -1,0 +1,68 @@
+{
+  "format": "picture-book",
+  "version": 1,
+  "id": "practice-paper-boat",
+  "title": "Mira's Paper Boat",
+  "author": "",
+  "style": "Watercolor",
+  "audience": "Easy language",
+  "language": "English",
+  "characters": [
+    {
+      "name": "Mira",
+      "description": "young girl with dark hair, a green jacket, and red boots"
+    },
+    {
+      "name": "Nori",
+      "description": "orange cat with bright eyes"
+    }
+  ],
+  "referenceImage": "",
+  "source": {
+    "name": "Mira's Paper Boat",
+    "text": "Mira carried her blue paper boat to the garden pond at sunrise. The boat had one yellow star painted on its side. Her orange cat Nori waited on the dry path and did not enter the water. Mira wanted to see whether the boat would float, but she set it on a flat stone first.\n\nA sharp reed had made a small hole in the boat while Mira carried it. Water would leak through that hole. Mira found a square of waxed paper in her pocket and pressed it over the hole. She did not put the boat in the pond yet. Nori stayed on the path.\n\nClouds gathered, and a strong wind began to blow. Mira lifted the patched boat from the stone and took it into the garden shed. Nori waited outside the shed door. Mira placed the boat on a wooden shelf, with its yellow star facing her, so the patch could dry before another test.\n\nAt sunset the wind was still strong. Mira left the boat on the shelf and closed the shed door. She and Nori walked home along the dry path. The boat had never touched the pond. Mira planned to return another day, but the story does not tell us whether the patched boat would float.\n"
+  },
+  "pages": [
+    {
+      "id": "practice-spread-1",
+      "title": "By the Pond",
+      "text": "At sunrise, Mira carried her blue paper boat to the garden pond. One yellow star was painted on the side. Nori, her orange cat, waited on the dry path and did not go into the water. Mira wanted to test the boat, but first she set it on a flat stone.",
+      "scene": "Sunrise by the garden pond. Mira stands beside a flat stone with the blue paper boat resting on it, the yellow star visible. Nori waits on the dry path nearby.",
+      "sourceNote": "Source section 1 of 4: Mira carried her blue paper boat to the garden pond at sunrise. The boat had one yellow star painted on its side. Her orange cat Nori waited on the dry path and did not enter the water. Mira wanted to see whether the boat would float, but she set it on a flat stone first.",
+      "image": "",
+      "alt": "Sunrise by the garden pond. Mira stands beside a flat stone with the blue paper boat resting on it, the yellow star visible. Nori waits on the dry path nearby.",
+      "imageCast": []
+    },
+    {
+      "id": "practice-spread-2",
+      "title": "A Small Hole",
+      "text": "A sharp reed had made a small hole in the boat while Mira carried it. Water would leak through the hole. Mira found a square of waxed paper in her pocket and pressed it over the hole. She still did not put the boat in the pond. Nori stayed on the path.",
+      "scene": "Near the pond, Mira presses a square of waxed paper onto a small hole in the blue paper boat while it rests on the flat stone. Nori stays on the dry path.",
+      "sourceNote": "Source section 2 of 4: A sharp reed had made a small hole in the boat while Mira carried it. Water would leak through that hole. Mira found a square of waxed paper in her pocket and pressed it over the hole. She did not put the boat in the pond yet. Nori stayed on the path.",
+      "image": "",
+      "alt": "Near the pond, Mira presses a square of waxed paper onto a small hole in the blue paper boat while it rests on the flat stone. Nori stays on the dry path.",
+      "imageCast": []
+    },
+    {
+      "id": "practice-spread-3",
+      "title": "Into the Shed",
+      "text": "Clouds gathered, and a strong wind began to blow. Mira picked up the patched boat from the stone and took it into the garden shed. Nori waited outside the shed door. Mira put the boat on a wooden shelf with the yellow star facing her, so the patch could dry before another test.",
+      "scene": "Inside the garden shed, Mira places the patched blue paper boat on a wooden shelf with the yellow star facing her. Nori waits outside the shed door under the cloudy sky.",
+      "sourceNote": "Source section 3 of 4: Clouds gathered, and a strong wind began to blow. Mira lifted the patched boat from the stone and took it into the garden shed. Nori waited outside the shed door. Mira placed the boat on a wooden shelf, with its yellow star facing her, so the patch could dry before another test.",
+      "image": "",
+      "alt": "Inside the garden shed, Mira places the patched blue paper boat on a wooden shelf with the yellow star facing her. Nori waits outside the shed door under the cloudy sky.",
+      "imageCast": []
+    },
+    {
+      "id": "practice-spread-4",
+      "title": "Another Day",
+      "text": "At sunset, the wind was still strong. Mira left the boat on the shelf and closed the shed door. Then Mira and Nori walked home along the dry path. The boat had never touched the pond. Mira planned to come back another day, but the story does not tell whether the patched boat would float.",
+      "scene": "At sunset, Mira closes the garden shed door while Nori stands beside her on the dry path. The sky is still windy and unsettled.",
+      "sourceNote": "Source section 4 of 4: At sunset the wind was still strong. Mira left the boat on the shelf and closed the shed door. She and Nori walked home along the dry path. The boat had never touched the pond. Mira planned to return another day, but the story does not tell us whether the patched boat would float.",
+      "image": "",
+      "alt": "At sunset, Mira closes the garden shed door while Nori stands beside her on the dry path. The sky is still windy and unsettled.",
+      "imageCast": []
+    }
+  ],
+  "updatedAt": 1
+}

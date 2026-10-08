@@ -86,3 +86,28 @@ The editorial visual system was checked against the concept. Artwork crops, live
 ## Remaining limitations
 
 Generated drafts still require editorial and visual review. The examples are reviewed adaptations, not unedited model output. Real local-model services have not been tested. Provider refusals stop the affected illustration while preserving completed work. No comparative claim against another app has been tested.
+
+
+## Version 1.0.0 — October 7, 2026
+
+The v1 delivery is an editable browser book and matching Windows x64 app. Manual text, imports, owned art, editing, save/recovery and exports need no model or API account. Optional generation produces drafts to review.
+
+The source build and 29 Node tests passed on Windows with Node 24.19 and pnpm 11.19. Actual browser TXT, Markdown, HTML, selectable PDF and DOCX imports passed; absent/too-short source and damaged PDF/project imports were rejected without replacing the open book. The patched PDF.js importer destroys its loading task after both successful and failed extraction.
+
+The Chrome 155.0.8059.12 check used a fictional four-spread book and owned portrait art. Whole-spread ordering, add/remove, undo/redo, save/reload and project recovery retained content and exact original-source whitespace. Imports received new identities. All eight exported PDF pages and the PNG reopened. Every PDF page was rendered and visually inspected: readable captions, complete portrait artwork and the unresolved ending remained present. Editable projects include embedded images and support 64 MB, separately from the 25 MB source-document limit.
+
+Controlled damaged saved-copy, failed IndexedDB write, failed save/switch, missing artwork, failed/malformed provider and active cancellation checks passed. Damaged stored records were retained and valid library books remained available. Failed adaptation kept the current book and exact pending source/options. Stop cancelled the provider request and cleared its visitor key; no key appeared in browser storage or export. These failure checks use controlled provider responses, not additional live API calls.
+
+Actual native Chrome tools read the visible book summary while omitting original-source fields and source-note contents, navigated a spread, rejected invalid navigation and registered without duplicates after reload. Edited captions can quote source material. Layouts at 1440, 1024, 800 and 500 pixels fit the viewport. Browser/manual runs had no page execution errors or external model/provider requests.
+
+An actual Electron process used a disposable profile and stable port 4174. Import/edit/save, a real restart, version display and project export passed with context isolation, sandboxing and Node integration disabled. The paired ZIP consumer check also exercises the extracted executable and a fresh frozen source install. Source and Windows app share the version; the portable package records its exact release commit.
+
+### First model results retained
+
+The first live GPT-5.4 draft for **Mira's Paper Boat** completed in about 14 seconds and independently passed all twelve frozen story checks. It retained only Mira and orange cat Nori in the cast, the blue paper boat and yellow star, reed-caused hole and waxed-paper repair, dry path/shed/shelf locations, wind, source order and unresolved ending. One real request was made; this short-story result does not establish fidelity for other books.
+
+The first completed Qwen 3 4B draft ran on Edge 154.0.4258.62 with an AMD RDNA3 WebGPU adapter. It produced four spreads and retained the source, but incorrectly included the boat and pond as characters and lost causal/location details. Its scenes were too vague to establish that Nori stayed outside the shed. It is a draft to edit, not a dependable automatic retelling.
+
+All four first SD-Turbo illustrations rendered on the same device. Every image contradicted a supplied scene detail: extra people/cats, a boat or cat in water, the cat inside the shed, or missing boat/star details. These first outputs were retained. No replacement generation turned them into passing results. Use owned artwork when source fidelity matters, and inspect its portrait-page crop.
+
+Initial text-download and image-generation cancellation preserved the old book and pending inputs. The image run made no hosted adaptation requests. Text/image workers were stopped afterward. Device compatibility was checked on this browser/GPU; other devices and memory configurations are different environments.

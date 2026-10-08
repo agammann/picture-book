@@ -1,3 +1,4 @@
+import {MAX_PROJECT_BYTES} from '../../shared/book.mjs';
 import {PDFDocument} from 'pdf-lib/dist/pdf-lib.esm.min.js';
 import {loadImage} from './imports';
 export async function download(blob,name){
@@ -13,9 +14,15 @@ export async function download(blob,name){
   if(!savedPath)link.click();
 }
 export const filename=title=>(title||'Picture Book').replace(/[<>:"/\\|?*\x00-\x1f]/g,'').slice(0,80).trim()||'Picture Book';
-async function imageData(src){if(src.startsWith('data:'))return src;const blob=await (await fetch(src)).blob();return new Promise(resolve=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.readAsDataURL(blob);});}
+async function imageData(src){
+  await loadImage(src);
+  if(src.startsWith('data:'))return src;
+  const response=await fetch(src);if(!response.ok)throw new Error('An illustration could not be loaded. Replace it or try the export again.');
+  const blob=await response.blob();if(!/^image\/(png|jpeg|webp)$/.test(blob.type))throw new Error('An illustration is not a supported image. Replace it before exporting.');
+  return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(new Error('An illustration could not be read.'));r.readAsDataURL(blob);});
+}
 export async function portableBook(book){return {...book,referenceImage:book.referenceImage?await imageData(book.referenceImage):'',pages:await Promise.all(book.pages.map(async p=>({...p,image:p.image?await imageData(p.image):''})))};}
-export async function exportProject(book){const data=await portableBook(book);await download(new Blob([JSON.stringify(data)],{type:'application/json'}),filename(book.title)+'.picturebook.json');}
+export async function exportProject(book){const data=await portableBook(book);const blob=new Blob([JSON.stringify(data)],{type:'application/json'});if(blob.size>MAX_PROJECT_BYTES)throw new Error('This editable project exceeds 64 MB. Use smaller illustrations or split the book before exporting.');await download(blob,filename(book.title)+'.picturebook.json');}
 function wrap(ctx,text,maxWidth){const lines=[];for(const paragraph of text.split('\n')){let line='';for(const word of paragraph.split(/\s+/)){if(ctx.measureText(word).width>maxWidth){if(line){lines.push(line);line='';}for(const letter of word){if(ctx.measureText(line+letter).width>maxWidth){lines.push(line);line='';}line+=letter;}continue;}const next=line?line+' '+word:word;if(ctx.measureText(next).width>maxWidth&&line){lines.push(line);line=word;}else line=next;}lines.push(line);}return lines;}
 export async function renderPage(book,index,side,{size=1600}={}){await document.fonts.ready;const height=Math.round(size*1.4);const canvas=document.createElement('canvas');canvas.width=size;canvas.height=height;const ctx=canvas.getContext('2d');ctx.fillStyle='#faf8f1';ctx.fillRect(0,0,size,height);const page=book.pages[index];
   if(side==='art'){if(page.image){const img=await loadImage(page.image);const scale=Math.max(size/img.width,height/img.height);ctx.drawImage(img,(size-img.width*scale)/2,(height-img.height*scale)/2,img.width*scale,img.height*scale);}else{ctx.fillStyle='#46505b';ctx.font=`${size*.04}px Georgia`;ctx.textAlign='center';ctx.fillText(page.title||'Illustration',size/2,height/2);}}

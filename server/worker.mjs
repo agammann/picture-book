@@ -1,9 +1,10 @@
+import {VERSION} from '../shared/version.mjs';
 import {publicUrl,readLimited} from '../shared/url-policy.mjs';
 import {visitorAdaptation} from './visitor-adaptation.mjs';
 export default {async fetch(request,env){
   const url=new URL(request.url);const json=(status,data)=>Response.json(data,{status,headers:{'Cache-Control':'no-store'}});
   if(url.pathname==='/api/adapt/visitor')return visitorAdaptation(request);
-  if(url.pathname==='/api/config')return json(200,{local:false,configured:true,browser:true,paidInference:false,visitorHosted:true,visitorModel:'gpt-5.4'});
+  if(url.pathname==='/api/config')return json(200,{local:false,configured:true,version:VERSION,browser:true,paidInference:false,visitorHosted:true,visitorModel:'gpt-5.4'});
   if(url.pathname==='/api/import-url'){
     if(request.method!=='POST')return json(405,{error:'Method not allowed.'});
     if(request.headers.get('Origin')!==url.origin)return json(403,{error:'Origin not allowed.'});

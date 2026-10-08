@@ -1,109 +1,84 @@
-# Picture Book
+# Picture Book 1.0.0
 
-Turn a long or difficult book into a fun, easy-to-read picture book. Free software, MIT licensed. Use the website in your browser, or choose the optional portable Windows desktop app.
+Picture Book is a browser editor and optional portable Windows app for making illustrated books you can revise, read, export and build on. The application is free software under the MIT license.
 
-## Use Picture Book online
+**[Open Picture Book](https://picture-book-studio.alx21.chatgpt.site)** · **[Download the v1 release](https://github.com/agammann/picture-book/releases/tag/v1.0.0)**
 
-**[Open Picture Book](https://picture-book-studio.alx21.chatgpt.site)** — no app installation required; model files download on first generation.
+Reading, editing, manual imports, owned artwork and exports need no account, key or model download. Start with the Alice showcase, or choose **New book** and import your story. Create 4, 6, 8, 12, 16 or 24 spreads; each spread has an illustration page and a facing story page.
 
-Read Alice's Adventures in Wonderland immediately, or choose **New book** to upload your own book, paste text, or import a public web page. Adapt on your device by default, or choose **Settings → Story generation → Hosted text** and enter your own OpenAI API key to use GPT-5.4. Hosted text can incur charges on your account; it has no operator-funded fallback. Illustrations still run on your device, or you can upload your own art. Reading, editing, local imports and exports need no model or key.
+## Make your first book
 
-Books stay in this browser on this device. Export an editable project to back up your work or move it to another device. The website requires an internet connection to open; the optional Windows version runs locally.
+1. Choose **New book → Paste text**, enter a short story you own and its title, and choose **8 pages · 4 spreads**.
+2. Choose **Start manually** to arrange your original words without running a model. A manual source must be under 12,000 characters. Longer sources can use the optional adaptation modes.
+3. Edit the **Story**, page title and scene. Use the arrows beside the canvas zoom to move a whole spread earlier or later; its caption and artwork move together. Add or remove spreads and use Undo/Redo.
+4. In **Art**, choose **Upload your own art** for each spread. PNG, JPG and WebP files up to 15 MB are supported. Portrait art near a 5:7 aspect ratio avoids the center crop used to fill a page. Inspect the visible crop and add a useful image description for readers using assistive technology.
+5. Choose **Read** and inspect every caption and picture. Choose **Export → Save editable project** for a portable backup, **Download PDF** for all pages, or **Save this illustration** for the current art page.
+6. Reopen a backup with **New book → Choose a file**. It creates a new library copy and retains your source, edits, characters and embedded artwork.
 
-## Read the showcase
+Books are saved in this browser on this device. An editable `.picturebook.json` file is your portable backup; a PDF or PNG cannot restore the editing project. Keep a backup before clearing browser data or changing devices. See [installation and upgrades](docs/INSTALLATION.md) and [recovery](docs/RECOVERY.md).
 
-**Alice’s Adventures in Wonderland is the main showcase and opens on a first visit.** The Time Machine is a second example. Both adaptations use simple language, a connected story, and the original ending. Each has 12 illustrated spreads across 24 pages. These examples were edited and reviewed after generation.
+## Our storytelling standard
+
+Make each story welcoming and easy to follow. Keep the important causes, choices, consequences, and real ending. Give the opening, central journey, and resolution enough room. Use familiar words without losing the story's meaning, and make each illustration agree with its page. A tragic or uncertain ending remains tragic or uncertain. Quality comes from careful execution and review.
+
+## Optional generation
+
+**On this device** is the default. Qwen 3 4B drafts text with WebLLM; smaller Qwen 3 1.7B and Llama 3.2 1B choices use less memory. SD-Turbo drafts 512 × 512 illustrations using ONNX Runtime Web. Use a current browser with WebGPU and compatible graphics memory. First-use weights download from public hosts; the image download is about 2.4 GB. Text is unloaded before drawing to free graphics memory. Downloads may be cached when browser storage allows.
+
+These modes produce drafts. In the v1 fictional-story check, the device text included a boat and pond in the character list, and all four first illustrations added or changed important scene details. Check names, causes, chronology, the real ending, who is present and what each picture depicts. Edit the captions and cast, and upload your own art to replace a mismatch. The two reviewed showcases below are edited examples, not a promise that a new draft will match them automatically. The image model does not condition on your reference image; short prompts can lose details.
+
+**Hosted text** is optional: choose **Settings → Story generation → Hosted text** and enter your own OpenAI API key. GPT-5.4 plans the book in one request, with a three-minute timeout and no automatic retry. It can incur charges on your API account. The first v1 fictional-story response passed all twelve frozen story checks, including the unresolved ending and the cat staying outside the shed. Review every new result; this single passing case does not guarantee every source. Hosted text does not generate paid images and has no operator-funded fallback.
+
+Choose **Stop** to cancel a download or generation. Existing books and completed illustrations are kept. Failed adaptation keeps its pending source and options. A cancelled text worker reloads cached weights for a later task. See the [dated verification results](docs/VERIFICATION.md) for the tested device and limits.
+
+## Read the showcases
+
+Alice's Adventures in Wonderland opens on a first visit. The Time Machine is a second example. Each has 12 illustrated spreads across 24 pages, with simple language and the original ending. These examples were edited and reviewed after generation.
 
 | Alice's Adventures in Wonderland | The Time Machine |
 | --- | --- |
 | [![Alice beside the little door](examples/alice-in-wonderland/cover.webp)](examples/alice-in-wonderland/book.pdf) | [![The inventor demonstrates his model](examples/the-time-machine/cover.webp)](examples/the-time-machine/book.pdf) |
 | [Read PDF](examples/alice-in-wonderland/book.pdf) · [Editable project](examples/alice-in-wonderland/book.picturebook.json) | [Read PDF](examples/the-time-machine/book.pdf) · [Editable project](examples/the-time-machine/book.picturebook.json) |
 
-Download an editable project, then choose **New book → Choose a file** to open it. Public example projects include the adaptation and illustrations, with the original uploaded document removed. [About the examples](examples/README.md).
+Download a project and import it with **New book → Choose a file**. Public examples omit the original uploaded document. [About the examples](examples/README.md).
 
-## Our storytelling standard
+## Run from the source release
 
-Make each story welcoming and easy to follow. Keep the important causes, choices, consequences, and real ending. Give the opening, central journey, and resolution enough room. Use familiar words without losing the story's meaning, and make each illustration agree with its page. A tragic or uncertain ending remains tragic or uncertain. Quality comes from careful execution and review.
-
-## What you can do
-
-- Import text PDFs, DOCX, text, Markdown, HTML, or a public web page.
-- Adapt a story into 8, 12, 16, 24, 32, or 48 pages, then edit every spread.
-- Choose an art style, reading level, and language. Simple language is the default: short sentences, familiar words, and a story that reaches its real ending.
-- Maintain character descriptions and a visual reference for manual review. Browser illustration uses descriptions; it does not condition on reference images.
-- Generate one illustration or all missing illustrations; upload your own art.
-- Undo and redo edits, read a book full screen, or use the browser's read-aloud voice.
-- Save books on your device and export a printable PDF, an illustration PNG, or an editable project.
-- Read, edit, and export in your browser without installing an app. Books are saved in this browser; keep an exported project as a backup.
-
-Picture Book has no paywall or export watermark. Device models process prompts locally. Optional hosted text uses your API account. Manual editing and exports need no model.
-
-## Run locally
-
-Install Node.js 22.12 or newer, then:
+Install **Node.js 24.19 or newer** and **pnpm 11.19.0**. Download `picture-book_1.0.0_source.zip`, verify its SHA-256 against `SHA256SUMS`, and extract it. In the extracted `picture-book-1.0.0` folder:
 
 ```sh
-npm install
-npm run build
-npm run preview
+pnpm install --frozen-lockfile --ignore-scripts
+pnpm build
+pnpm preview
 ```
 
-Open **http://127.0.0.1:4173**. No provider key or environment variable is needed for device mode. Optional hosted text uses the key entered in Settings, never a server environment key. Browser inference requires WebGPU and compatible graphics hardware.
+Open **http://127.0.0.1:4173**. No key or environment file is needed for manual or device mode. Optional hosted text uses the visitor key entered in Settings. The server reads no provider environment key. Stop the local server with Ctrl+C.
 
-For a reproducible dependency install, use pnpm 11.19.0 with `pnpm install --frozen-lockfile`. The lockfile is included. CI checks the production build and core tests.
-
-For development, run the local server in one terminal and `npm run dev` in another. Vite serves the editor at port 5173 and proxies API requests to port 4173.
-
-## Windows desktop
-
-Run `npm run build`, then `npm run desktop`, or create a portable folder with `npm run desktop:pack`. The package uses the installed Electron runtime. Run `Picture Book.exe` and keep its accompanying files together. Desktop uses local port 4174 and a single application instance so the storage origin stays stable. The portable package is unsigned.
-
-## Browser models
-
-Device mode downloads model files from public hosts on first use. Its text generation runs in a dedicated browser worker using WebLLM; device prompts are not sent to a hosted model. This workflow defaults to Qwen 3 4B. Smaller Qwen 3 1.7B and Llama 3.2 1B choices use less memory but can produce substantially weaker drafts. Model downloads are cached when browser storage permits.
-
-Use HTTPS (or localhost) and a current browser with WebGPU and compatible graphics hardware. A model choice does not guarantee that every device has enough memory. Download speed, inference speed and answer quality depend on the device and model. Stop a download or generation from the interface; errors preserve existing inputs. Stopping text generation resets its worker; the next task reloads cached weights. There is no automatic paid model fallback. Hosting and model-download bandwidth remain separate from AI API fees.
-
-SD-Turbo provides 512 × 512 draft illustrations using ONNX Runtime Web and WebGPU. Its first download is about 2.4 GB. It uses more graphics memory than the text model, which is unloaded before drawing. Image prompts are limited by the model's short text encoder; scene or character details may be lost. Reference-image conditioning from the prior provider edition is unavailable. Upload your own art if quality, licensing or device support does not suit the project.
-
-The selected converted image weights retain their [noncommercial license](https://huggingface.co/schmuell/sd-turbo-ort-web/blob/main/LICENSE). MIT licensing of the application does not replace model licenses. The pipeline follows the MIT-licensed [Microsoft ONNX Runtime Web example](https://github.com/microsoft/onnxruntime-inference-examples/tree/main/js/sd-turbo).
-
-## Optional hosted text
-
-Choose **Settings → Story generation → Hosted text** and enter a key from your own OpenAI API account. GPT-5.4 reads the submitted source and plans the book in one request, with a three-minute timeout and no automatic retry. The source is partitioned in order and retained in your editable project. The server validates spread count and source-section coverage; these checks do not prove that every sentence or scene is faithful. Review names, causes, chronology, negations, uncertainty, the ending, and scene locations before illustrating.
-
-The source, its title, and adaptation settings pass through the app server to the fixed OpenAI Responses API. Requests use `store:false`; OpenAI’s applicable data-retention policies still apply. The key stays in tab memory and is excluded from saved books, browser storage, and exports. **Clear key**, **Stop**, switching to device mode, leaving the page, or reloading removes it. No server key is read or stored. The hosted input limit is 600,000 characters and 900,000 UTF-8 bytes, with a separate serialized-input budget; oversized input is rejected rather than truncated.
-
-Hosted text does not generate paid images. The same local illustration and manual-art tools remain available. See [verification and limits](docs/VERIFICATION.md) for the actual device and hosted checks.
-
-## Import and export details
-
-PDFs must contain selectable text; scanned pages require OCR first. Files are limited to 25 MB, source text to 600,000 characters, and PDFs to 1,500 pages. Website import supports public HTTPS HTML/text pages; download a PDF or DOCX link and upload the file instead. Some websites block import.
-
-Generation is a draft: review names, facts, chronology, and visual continuity. Long books are condensed in sections, and details can be lost. In device mode, the resulting source is divided in order before each spread is rewritten; this preserves the section order but does not prove that every generated sentence is faithful. Image consistency is an aim, not a guarantee. Longer books and image revisions require more time and graphics work on your device.
-
-In device mode, completed reading sections are cached on this device so retries can resume. Errors remain visible until dismissed. Finished illustrations are saved one at a time. Stopping drawing terminates the image worker; already finished illustrations remain saved.
-
-Local and desktop exports are saved in **Downloads/Picture Book**, preserving existing files. Hosted web exports use your browser’s download flow and leave a Save link available. PDF exports have portrait pages matching the editor and rasterized text. Editable projects include the original source and all artwork. Export before clearing browser data or moving devices. Browser storage is not a cloud backup.
-
-Use stories you own, have permission to adapt, or that are in the public domain. No third-party novel PDF is distributed in this project.
-
-## Privacy
-
-Books are saved in IndexedDB on your device. File imports, editing, device story adaptation and illustration prompts are processed locally. Optional hosted text sends the source and adaptation settings through the app server to OpenAI using your key. The application does not log or persist that key, and requests use `store:false`. Public hosts supply SDK/runtime code and model weights. Website import sends the requested URL through the app server and retrieves its public page. There are no app accounts, analytics or cloud book storage. Hosting, model hosts and imported sites may retain ordinary request metadata. Exports can contain original source and all artwork; treat them accordingly.
-
-## Development and distribution
+For a pinned Git checkout instead:
 
 ```sh
-npm test
-npm run build
-npm run package:source
+git clone --branch v1.0.0 https://github.com/agammann/picture-book.git
+cd picture-book
 ```
 
-`dist/client` contains the browser app; `dist/server/index.js` is a worker for a host exposing an `ASSETS` fetch binding. The Node server can also serve the complete app. Set the worker asset binding and SPA fallback according to your host. `.openai/hosting.json` associates a checkout with a Sites project when used with Sites.
+Use the same install/build/preview commands. See [development](docs/DEVELOPMENT.md) for tests, API/hosting layout and packaging.
 
-The source archive uses an explicit file allowlist and includes the two reviewed examples and excludes keys, private local books, dependencies, build output, and account-specific hosting metadata.
+## Windows app
+
+Download `picture-book_1.0.0_windows-x64.zip`, verify its checksum, extract the entire archive, and run **Picture Book.exe**. Keep all accompanying files together. No Node or pnpm installation is needed for this package. It is an unsigned Windows x64 build. Port **4174** must be free; a single app instance and stable origin retain the library across restarts and upgrades.
+
+The source and Windows app share version 1.0.0, visible in **Settings**. `resources/app/RELEASE.json` identifies the Windows package's exact source commit. Upgrading does not move browser books into the desktop edition; import an exported project to transfer them. [Windows setup, build and upgrade instructions](docs/INSTALLATION.md#windows-portable-app).
+
+## Import, export and privacy
+
+Import selectable-text PDF, DOCX, TXT, Markdown, HTML, a public HTTPS text page or an editable Picture Book project. Source files are limited to 25 MB, editable projects to 64 MB, source text to 600,000 characters and PDFs to 1,500 pages. Scanned PDFs need OCR first. Protected pages may block import. A website's PDF or DOCX link must be downloaded and uploaded instead. Supported project imports retain up to 48 spreads; new-book options create up to 24.
+
+Local and Windows exports go to **Downloads/Picture Book**, using numbered filenames to preserve earlier copies. Website exports use browser downloads and leave a Save link available. PDF pages are portrait and their text is rasterized. PNG contains the current art page. Editable projects include the exact retained original source and all embedded artwork. A missing or unreadable illustration blocks an editable export so it cannot become a silently incomplete backup.
+
+File imports, editing, device adaptation and illustration prompts are processed locally. Hosted text sends the source, title and adaptation settings through the app server to the fixed OpenAI Responses API, using `store:false`; the provider's applicable retention policies still apply. Hosted input is limited to 600,000 characters and 900,000 UTF-8 bytes, with a separate serialized-input budget; oversized input is rejected.
+
+Your API key stays in tab memory and is excluded from library records, browser storage and exports. **Clear key**, **Stop**, switching to device mode, leaving the page or reloading removes it. There are no app accounts, analytics or cloud book storage. Public hosts supply runtime code and model weights; website import retrieves the requested public page through the app server. Hosts may retain ordinary request metadata. Share exported original sources and images only when you intend to.
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+The application and included test material are MIT licensed. See [LICENSE](LICENSE) and [third-party notices](THIRD_PARTY_NOTICES.md). Use stories and artwork you own, have permission to adapt, or that are in the public domain. The selected SD-Turbo converted weights retain their **[noncommercial model license](https://huggingface.co/schmuell/sd-turbo-ort-web/blob/ace89b7d2cd849f9a73914cdbb8a3ea60c853dd1/LICENSE)**; the application's MIT license does not change model terms. The image pipeline follows the MIT-licensed [Microsoft ONNX Runtime Web example](https://github.com/microsoft/onnxruntime-inference-examples/tree/main/js/sd-turbo).

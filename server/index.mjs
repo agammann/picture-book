@@ -1,3 +1,4 @@
+import {VERSION} from '../shared/version.mjs';
 import http from 'node:http';
 import https from 'node:https';
 import dns from 'node:dns/promises';
@@ -47,7 +48,7 @@ export async function startServer({port=4173,staticDir=path.join(root,'dist/clie
       if(url.pathname.startsWith('/api/')){
         const incomingOrigin=req.headers.origin;
         if(incomingOrigin && ![origin,`http://localhost:${actualPort}`,'http://127.0.0.1:5173'].includes(incomingOrigin)){json(403,{error:'Origin not allowed.'});return;}
-        if(url.pathname==='/api/config'&&req.method==='GET'){json(200,{local:true,configured:true,browser:true,paidInference:false,visitorHosted:true,visitorModel:'gpt-5.4',localExports:true});return;}
+        if(url.pathname==='/api/config'&&req.method==='GET'){json(200,{local:true,configured:true,version:VERSION,browser:true,paidInference:false,visitorHosted:true,visitorModel:'gpt-5.4',localExports:true});return;}
         if(url.pathname==='/api/adapt/visitor'){
           const controller=new AbortController();
           const abort=()=>controller.abort();

@@ -1,12 +1,6 @@
-import fs from 'node:fs/promises';
-import path from 'node:path';
-import {zipSync} from 'fflate';
-const root=process.cwd();const output=path.resolve(process.argv[2]||'../../outputs/Picture-Book-Source.zip');
-const allowed=['src','public','server','shared','scripts','desktop','tests','docs','examples','.github'];
-const files={};
-async function walk(relative){for(const item of await fs.readdir(relative,{withFileTypes:true})){if(item.isSymbolicLink())throw new Error('Source package must not contain links.');const name=path.join(relative,item.name);if(item.isDirectory())await walk(name);else files['picture-book/'+name.replaceAll('\\','/')]=new Uint8Array(await fs.readFile(name));}}
-for(const dir of allowed)try{await walk(dir);}catch(e){if(e.code!=='ENOENT')throw e;}
-for(const name of ['package.json','package-lock.json','pnpm-lock.yaml','pnpm-workspace.yaml','index.html','vite.config.js','LICENSE','README.md','.gitignore','.env.example'])try{files['picture-book/'+name]=new Uint8Array(await fs.readFile(name));}catch(e){if(e.code!=='ENOENT')throw e;}
-// Generic hosting configuration contains no credentials or account identifiers.
-files['picture-book/.openai/hosting.json']=new TextEncoder().encode('{}\n');
-await fs.mkdir(path.dirname(output),{recursive:true});await fs.writeFile(output,zipSync(files,{level:6}));console.log(output);
+import {execFileSync} from 'node:child_process';import {readFileSync,mkdirSync} from 'node:fs';import path from 'node:path';
+const git=args=>execFileSync('git',args,{encoding:'utf8',windowsHide:true}).trim();
+if(path.resolve(git(['rev-parse','--show-toplevel']))!==process.cwd()||git(['status','--porcelain','--untracked-files=normal']))throw new Error('Package a clean committed tree from its repository root.');
+const pkg=JSON.parse(readFileSync('package.json','utf8'));if(pkg.name!=='picture-book'||pkg.license!=='MIT'||!/^\d+\.\d+\.\d+$/.test(pkg.version))throw new Error('Expected stable Picture Book MIT metadata.');
+const hosting=JSON.parse(readFileSync('.openai/hosting.json','utf8'));if(Object.keys(hosting).length)throw new Error('Source release requires generic empty hosting metadata.');
+const output=path.resolve(process.argv[2]||`release-artifacts/picture-book_${pkg.version}_source.zip`);mkdirSync(path.dirname(output),{recursive:true});execFileSync('git',['archive','--format=zip',`--prefix=picture-book-${pkg.version}/`,`--output=${output}`,'HEAD'],{windowsHide:true});console.log(output);
