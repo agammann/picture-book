@@ -1,8 +1,8 @@
-# Picture Book 1.0.0
+# Picture Book 1.0.1
 
 Picture Book is a browser editor and optional portable Windows app for making illustrated books you can revise, read, export and build on. The application is free software under the MIT license.
 
-**[Open Picture Book](https://picture-book-studio.alx21.chatgpt.site)** · **[Download the v1 release](https://github.com/agammann/picture-book/releases/tag/v1.0.0)**
+**[Open Picture Book](https://picture-book-studio.alx21.chatgpt.site)** · **[Download the v1 release](https://github.com/agammann/picture-book/releases/tag/v1.0.1)**
 
 Reading, editing, manual imports, owned artwork and exports need no account, key or model download. Start with the Alice showcase, or choose **New book** and import your story. Create 4, 6, 8, 12, 16 or 24 spreads; each spread has an illustration page and a facing story page.
 
@@ -44,7 +44,7 @@ Download a project and import it with **New book → Choose a file**. Public exa
 
 ## Run from the source release
 
-Install **Node.js 24.19 or newer** and **pnpm 11.19.0**. Download `picture-book_1.0.0_source.zip`, verify its SHA-256 against `SHA256SUMS`, and extract it. In the extracted `picture-book-1.0.0` folder:
+Install **Node.js 24.19 or newer** and **pnpm 11.19.0**. Download `picture-book_1.0.1_source.zip`, verify its SHA-256 against `SHA256SUMS`, and extract it. In the extracted `picture-book-1.0.1` folder:
 
 ```sh
 pnpm install --frozen-lockfile --ignore-scripts
@@ -57,7 +57,7 @@ Open **http://127.0.0.1:4173**. No key or environment file is needed for manual 
 For a pinned Git checkout instead:
 
 ```sh
-git clone --branch v1.0.0 https://github.com/agammann/picture-book.git
+git clone --branch v1.0.1 https://github.com/agammann/picture-book.git
 cd picture-book
 ```
 
@@ -65,9 +65,9 @@ Use the same install/build/preview commands. See [development](docs/DEVELOPMENT.
 
 ## Windows app
 
-Download `picture-book_1.0.0_windows-x64.zip`, verify its checksum, extract the entire archive, and run **Picture Book.exe**. Keep all accompanying files together. No Node or pnpm installation is needed for this package. It is an unsigned Windows x64 build. Port **4174** must be free; a single app instance and stable origin retain the library across restarts and upgrades.
+Download `picture-book_1.0.1_windows-x64.zip`, verify its checksum, extract the entire archive, and run **Picture Book.exe**. Keep all accompanying files together. No Node or pnpm installation is needed for this package. It is an unsigned Windows x64 build. Port **4174** must be free; a single app instance and stable origin retain the library across restarts and upgrades.
 
-The source and Windows app share version 1.0.0, visible in **Settings**. `resources/app/RELEASE.json` identifies the Windows package's exact source commit. Upgrading does not move browser books into the desktop edition; import an exported project to transfer them. [Windows setup, build and upgrade instructions](docs/INSTALLATION.md#windows-portable-app).
+The source and Windows app share version 1.0.1, visible in **Settings**. `resources/app/RELEASE.json` identifies the Windows package's exact source commit. Upgrading does not move browser books into the desktop edition; import an exported project to transfer them. [Windows setup, build and upgrade instructions](docs/INSTALLATION.md#windows-portable-app).
 
 ## Import, export and privacy
 

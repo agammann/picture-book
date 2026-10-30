@@ -6,7 +6,7 @@
 
 The public website needs no app installation. Reading, manual editing and exports need no model download. Browser generation needs HTTPS or localhost, WebGPU and compatible graphics memory. Books belong to the current browser profile and origin; export a project before changing either.
 
-For a local source install, use Node.js 24.19 or newer and pnpm 11.19.0. Extract the source release, open a terminal in `picture-book-1.0.0`, and run:
+For a local source install, use Node.js 24.19 or newer and pnpm 11.19.0. Extract the source release, open a terminal in `picture-book-1.0.1`, and run:
 
 ```sh
 pnpm install --frozen-lockfile --ignore-scripts
@@ -21,9 +21,9 @@ Upgrade by exporting each book first, extracting a newer source release into a s
 ## Windows portable app
 
 1. Download the Windows x64 ZIP and `SHA256SUMS` from the same release.
-2. In PowerShell, run `Get-FileHash -Algorithm SHA256 -LiteralPath .\picture-book_1.0.0_windows-x64.zip` and compare the full hash with `SHA256SUMS`.
-3. Extract the entire ZIP into a normal writable folder. Run **Picture Book.exe** inside the extracted `Picture-Book-Windows-1.0.0` folder, with all accompanying files present. Do not run it inside the ZIP.
-4. Open Settings and check version 1.0.0. Read the showcase, import your own project or start manually.
+2. In PowerShell, run `Get-FileHash -Algorithm SHA256 -LiteralPath .\picture-book_1.0.1_windows-x64.zip` and compare the full hash with `SHA256SUMS`.
+3. Extract the entire ZIP into a normal writable folder. Run **Picture Book.exe** inside the extracted `Picture-Book-Windows-1.0.1` folder, with all accompanying files present. Do not run it inside the ZIP.
+4. Open Settings and check version 1.0.1. Read the showcase, import your own project or start manually.
 
 The app is unsigned. Windows may request permission before launching an unsigned executable. The publisher does not provide a code-signing certificate. No Node, pnpm, provider account or key is needed for manual use. Device mode needs a supported GPU and internet access for its first downloads.
 
