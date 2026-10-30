@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+Refresh desktop runtime and package download dependencies to compatible maintenance releases.
+
 ## 1.0.0
 
 - Ship matching MIT source and portable Windows x64 packages with complete checksums and bundled runtime notices.

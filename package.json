@@ -1,6 +1,6 @@
 {
   "name": "picture-book",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Turn stories into editable, illustrated books. Free and open source.",
   "type": "module",
   "license": "MIT",
@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "6.1.2",
-    "electron": "43.7.9",
+    "electron": "43.8.1",
     "esbuild": "0.28.2",
     "vite": "8.3.3",
     "playwright": "1.63.0"
