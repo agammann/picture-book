@@ -16,6 +16,7 @@ const profile = path.join(out, `profile-${Date.now()}`);
 await mkdir(profile, { recursive: true });
 const fixture = path.resolve('tests/fixtures/paper-boat.picturebook.json');
 const source = JSON.parse(await readFile(fixture, 'utf8'));
+const currentElectron = JSON.parse(await readFile('package.json', 'utf8')).devDependencies.electron;
 let app;
 async function launch(executablePath, expectedElectron) {
   app = await electron.launch({ executablePath, args: [`--data-dir=${profile}`],
@@ -42,7 +43,7 @@ try {
   await page.getByText('Saved on this device', { exact: true }).waitFor({ state: 'attached' });
   await app.close(); app = null;
   await cp(profile, path.join(out, 'prior-profile-backup'), { recursive: true, errorOnExist: true, force: false });
-  page = await launch(currentExe, '45.3.1');
+  page = await launch(currentExe, currentElectron);
   assert.equal(await page.getByRole('textbox', { name: 'Story', exact: true }).inputValue(), revised);
   await page.getByRole('button', { name: 'Export', exact: true }).click();
   const response = page.waitForResponse(r => r.url().endsWith('/api/export'));
