@@ -65,6 +65,20 @@ jobs:
           PICTURE_BOOK_TEST_APP: ${{ runner.workspace }}/picture-book-release-consumer/windows/resources/app
         run: pnpm test:desktop
       - if: runner.os == 'Windows'
+        name: Download verified prior Windows release
+        shell: pwsh
+        run: |
+          $archive = Join-Path $env:RUNNER_TEMP 'picture-book-1.0.1-windows-x64.zip'
+          Invoke-WebRequest 'https://github.com/agammann/picture-book/releases/download/v1.0.1/picture-book_1.0.1_windows-x64.zip' -OutFile $archive
+          if ((Get-FileHash -Algorithm SHA256 -LiteralPath $archive).Hash -ne '425c4fffd392218858b34f0d60fc4d53726b45ed74164aef0b5a6ed869e651a7') { throw 'Prior release checksum mismatch' }
+          Expand-Archive -LiteralPath $archive -DestinationPath (Join-Path $env:RUNNER_TEMP 'picture-book-prior')
+      - if: runner.os == 'Windows'
+        name: Verify desktop profile upgrade
+        env:
+          PICTURE_BOOK_PRIOR_ROOT: ${{ runner.temp }}/picture-book-prior
+          PICTURE_BOOK_TEST_DESKTOP: ${{ runner.workspace }}/picture-book-release-consumer/windows/Picture Book.exe
+        run: node scripts/test-desktop-upgrade.mjs
+      - if: runner.os == 'Windows'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: picture-book-release
