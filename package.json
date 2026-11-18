@@ -1,6 +1,6 @@
 {
   "name": "picture-book",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Turn stories into editable, illustrated books. Free and open source.",
   "type": "module",
   "license": "MIT",

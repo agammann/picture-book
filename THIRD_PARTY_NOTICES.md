@@ -4,15 +4,15 @@ Picture Book's application source is MIT licensed. Its dependencies, downloaded 
 
 | Component | Version | License / upstream |
 | --- | --- | --- |
-| React and React DOM | 19.2.6 | MIT, https://github.com/facebook/react |
-| lucide-react | 1.31.0 | ISC, https://github.com/lucide-icons/lucide |
+| React and React DOM | 19.3.1 | MIT, https://github.com/facebook/react |
+| lucide-react | 1.72.0 | ISC, https://github.com/lucide-icons/lucide |
 | fflate | 0.8.3 | MIT, https://github.com/101arrowz/fflate |
 | idb-keyval | 6.3.0 | Apache-2.0, https://github.com/jakearchibald/idb-keyval |
 | pdf-lib | 1.17.1 | MIT, https://github.com/Hopding/pdf-lib |
 | PDF.js / pdfjs-dist | 6.4.299 | Apache-2.0, https://github.com/mozilla/pdf.js |
-| Electron | 43.7.9 | MIT, https://github.com/electron/electron; Chromium and runtime notices are included in the Windows package. |
-| Vite, its React plugin and esbuild | 8.3.3 / 6.1.2 / 0.28.2 | MIT; build tooling, not required to launch the Windows package. |
-| Playwright | 1.63.0 | Apache-2.0, https://github.com/microsoft/playwright; verification tooling. |
+| Electron | 45.3.1 | MIT, https://github.com/electron/electron; Chromium and runtime notices are included in the Windows package. |
+| Vite, its React plugin and esbuild | 8.3.8 / 6.3.0 / 0.28.2 | MIT; build tooling, not required to launch the Windows package. |
+| Playwright | 1.65.0 | Apache-2.0, https://github.com/microsoft/playwright; verification tooling. |
 
 The Windows package retains Electron's `LICENSE`, `LICENSES.chromium.html` and available dependency license files under `resources/app/third-party/`. See the exact dependency lockfile and those files for additional terms.
 

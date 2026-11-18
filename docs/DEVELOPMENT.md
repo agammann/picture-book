@@ -14,6 +14,8 @@ pnpm test:browser
 
 For a browser executable outside Playwright's installed Chromium, set `PICTURE_BOOK_TEST_CHROME` to its absolute path. The native tool input contract is checked with Chrome 155; other browser versions can differ. Native tools read the open book summary and navigate spreads. The returned edited captions and scene directions can quote source material, but the original-source field, source-note contents, image bytes and keys are omitted.
 
+Both native tools mark returned book text as untrusted content. Spread navigation changes the visible editor and returns its user-edited page title.
+
 For development, run `pnpm preview` in one terminal and `pnpm dev` in another. Vite serves port 5173 and proxies the API to loopback port 4173. Build after production-source changes.
 
 ## Layout
