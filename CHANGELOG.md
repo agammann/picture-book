@@ -1,12 +1,12 @@
 # Changelog
 
-## 1.0.2 — unpublished
+Version 1.0.2 remains an unpublished release candidate.
+
+## 1.0.2
 
 - Mark the spread-navigation tool's returned title as untrusted user-authored content.
 - Align third-party notices with the installed dependency versions.
 - Include the current maintenance dependencies and desktop profile-upgrade verification.
-
-The required dependency audit currently holds publication.
 
 ## 1.0.1
 
