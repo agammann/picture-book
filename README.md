@@ -1,4 +1,6 @@
-# Picture Book 1.0.1
+# Picture Book 1.0.2
+
+Version 1.0.2 is an unpublished source candidate. The available source and Windows downloads remain v1.0.1. Publication is held by the required dependency audit.
 
 Picture Book is a browser editor and optional portable Windows app for making illustrated books you can revise, read, export and build on. The application is free software under the MIT license.
 
@@ -67,7 +69,7 @@ Use the same install/build/preview commands. See [development](docs/DEVELOPMENT.
 
 Download `picture-book_1.0.1_windows-x64.zip`, verify its checksum, extract the entire archive, and run **Picture Book.exe**. Keep all accompanying files together. No Node or pnpm installation is needed for this package. It is an unsigned Windows x64 build. Port **4174** must be free; a single app instance and stable origin retain the library across restarts and upgrades.
 
-The source and Windows app share version 1.0.1, visible in **Settings**. `resources/app/RELEASE.json` identifies the Windows package's exact source commit. Upgrading does not move browser books into the desktop edition; import an exported project to transfer them. [Windows setup, build and upgrade instructions](docs/INSTALLATION.md#windows-portable-app).
+Each released source and Windows app share a version, visible in **Settings**. `resources/app/RELEASE.json` identifies the Windows package's exact source commit. Upgrading does not move browser books into the desktop edition; import an exported project to transfer them. [Windows setup, build and upgrade instructions](docs/INSTALLATION.md#windows-portable-app).
 
 ## Import, export and privacy
 

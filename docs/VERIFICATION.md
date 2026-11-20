@@ -1,3 +1,23 @@
+# Verification
+
+## November 17, 2026 — 1.0.2 checks
+
+Version 1.0.2 is an unpublished source candidate. The frozen install, production client and Worker build, and all 29 Node tests passed with Node 24.19.0 and pnpm 11.19.0. Vite 8.3.8 and Rolldown 1.2.19 were already selected by the lockfile.
+
+Chrome 155.0.8059.12 passed 55 controlled browser checks for fictional imports, owned artwork, editing, exports, recovery and provider failures. The actual native navigation tool retained `readOnlyHint:false` and reported `untrustedContentHint:true` for its user-edited title. These checks used synthetic provider responses and had no page execution errors or external requests.
+
+The existing public editor passed a separate manual four-spread workflow with owned artwork, reorder/undo, backup import, reload, three export formats and both native tools. Its exported PDF rendered as eight portrait pages. Model quality remains scoped to the dated results below.
+
+The compiled 1.0.2 local editor passed a separate native-browser replay. Both tool payloads matched the public baseline, and navigation reported the corrected hint. The source Electron 45.3.1 app passed all nine desktop checks with an isolated profile, including fictional import/edit, a real restart, version display, sandbox settings and an exact project export. Renderer errors were empty.
+
+The actual published 1.0.1 executable launched and passed identity, origin and sandbox checks. Its native click automation timed out waiting for button stability on this host. A separate browser using that executable's local server completed import, edit, reload and an isolated file export. These are distinct interface results.
+
+At the November 17 check, the required full dependency audit exited 1 for one high Picomatch advisory in development tooling. The response suggested `>=4.0.8`, while the registry reported 4.0.7 as latest and returned 404 for 4.0.8. The advisory listed no patched version at that check, so publication was held.
+
+## November 19, 2026 dependency audit recheck
+
+GitHub withdrew the Picomatch advisory on November 18. The required dependency audit reported zero advisories on the candidate lockfile when rerun on November 19. The source candidate remains a draft. [Advisory record](https://github.com/advisories/GHSA-fc5q-39xc-vjpf)
+
 # Verification — October 2, 2026
 
 The current app offers device generation and optional visitor-funded GPT-5.4 text adaptation. These checks used Windows, Edge 154, Node 24.19, and an AMD RDNA 3 WebGPU adapter with shader-f16 support. They establish the observed paths below, not universal device support or model accuracy.
