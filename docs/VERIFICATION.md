@@ -12,7 +12,11 @@ The compiled 1.0.2 local editor passed a separate native-browser replay. Both to
 
 The actual published 1.0.1 executable launched and passed identity, origin and sandbox checks. Its native click automation timed out waiting for button stability on this host. A separate browser using that executable's local server completed import, edit, reload and an isolated file export. These are distinct interface results.
 
-The required full dependency audit exits 1 for one high Picomatch advisory in development tooling. Its response suggests `>=4.0.8`, while the official registry reports 4.0.7 as latest and returns 404 for 4.0.8. The [official advisory](https://github.com/advisories/GHSA-fc5q-39xc-vjpf) lists no patched version. Publication remains held.
+At the November 17 check, the required full dependency audit exited 1 for one high Picomatch advisory in development tooling. The response suggested `>=4.0.8`, while the registry reported 4.0.7 as latest and returned 404 for 4.0.8. The advisory listed no patched version at that check, so publication was held.
+
+## November 19, 2026 dependency audit recheck
+
+GitHub withdrew the Picomatch advisory on November 18. The required dependency audit reported zero advisories on the candidate lockfile when rerun on November 19. The source candidate remains a draft. [Advisory record](https://github.com/advisories/GHSA-fc5q-39xc-vjpf)
 
 # Verification — October 2, 2026
 
